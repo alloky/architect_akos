@@ -13,15 +13,12 @@ int main(){
 	/*
 		Output:
 	
-		INFO : This is info message
-		WARNING : This is warning message
-		DEBUG : This is debug message
-		ERROR : This is error message
 		>> This is just message
+		>> This is another message
+
 	*/
-	LEV_LOG(LL_INFO, "This is info message");
-	LEV_LOG(LL_WARN, "This is warning message");
-	LEV_LOG(LL_DEBUG, "This is debug message");
-	LEV_LOG(LL_ERR, "This is error message");
+
 	LOG("This is just message");
+	LOG("This is another message");
+
 }

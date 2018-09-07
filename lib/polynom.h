@@ -8,12 +8,30 @@
  *
  *             Supports root finding and spaces-divide string parsing.
  */
-class Polynom{
+class Polynom {
 public:	
+	/**
+	 * @brief degree of polynomial
+	 */
 	int deg;
+	
+	/**
+	 * @brief coefs of polynomial
+	 */
 	double* coefs;
 	
+	/**
+	 * @brief roots of polynomial
+	 * 
+	 * Will be allocated and filled in @link find_roots @endlink
+	 */
 	double* roots;
+	
+	/**
+	 * @brief multiplicities of roots of the polynomial
+	 * 
+	 * Will be allocated and filled in @link find_roots @endlink
+	 */
 	char* roots_muls;
 
 	/**
@@ -29,7 +47,7 @@ public:
 	 *
 	 * @param      s     string with coef separated with spaces
 	 */
-	void parse_coefs(std::string& s);
+	void parse_coefs(const std::string& s);
 	
 	/**
 	 * @brief      Find all roots of this polynom
@@ -41,6 +59,10 @@ public:
 	 * 
 	 */
 	int find_roots();
+
+	/**
+	 * @brief      Destroys the object and frees all arrays
+	 */
 	~Polynom();
 private:
 	int _find_roots_linear();
