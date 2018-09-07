@@ -1,3 +1,5 @@
+#include <string> 
+
 #include "mathtools.h"
 
 
@@ -47,7 +49,7 @@ public:
 	 *
 	 * @param      s     string with coef separated with spaces
 	 */
-	void parse_coefs(const std::string& s);
+	void parse_coefs(const std::string& space_sep_coefs);
 	
 	/**
 	 * @brief      Find all roots of this polynom

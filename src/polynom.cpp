@@ -1,3 +1,6 @@
+#include <sstream> 
+#include <assert>
+
 #include "polynom.h"
 
 Polynom::Polynom (int n) :
@@ -62,6 +65,20 @@ int Polynom::_find_roots_square(){
             return 2;
         case MT_INF_ROOTS:
             return MT_INF_ROOTS;
+    }
+}
+
+void Polynom::parse_coefs(const std::string& space_sep_coefs){
+    
+    std::istringstream stream(space_sep_coefs);
+    coefs = new double[n];
+
+    assert(coefs != NULL);
+    
+    for(int i = 0; i < n; ++i){
+        double cur_coef = 0.0;
+        stream >> cur_coef;
+        coefs[i] = cur_coef;  
     }
 }
 

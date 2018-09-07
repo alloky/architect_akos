@@ -1,8 +1,15 @@
 #include "mathtools.h"
+#include "math.h"
+#include <asssert.h>
 
 /** @brief see @link mathtool.h @endlink for docs
 */
 int solve_linear(double a, double b, double* root_1){
+	
+	// Check for NaNs
+	assert( a == a );
+	assert( b == b );
+	
 	if (a == 0){
 		if(b == 0)
 			return MT_INF_ROOTS;
@@ -17,7 +24,10 @@ int solve_linear(double a, double b, double* root_1){
 */
 int solve_square(double a, double b, double c, double* root_1, double* root_2){
 	
-	//TODO: verify for NaNs
+	// Check for NaNs
+	assert( a == a );
+	assert( b == b );
+	assert( c == c );
 
 	if(a == 0.0){
 		return solve_linear(b, c, root_1);
