@@ -14,6 +14,6 @@ namespace utility {
 	 *
 	 * @tparam     T     arr type
 	 */
-	template <class T>
+	template <typename T>
 	void cout_array(T* arr);
 }

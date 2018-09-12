@@ -2,23 +2,26 @@
 
 #include "logging.h"
 #include "polynom.h"
-#include "utility.h"
+#include "utility.hpp"
 
 int main(){
 	LEV_LOG(LL_INFO, "Tool for polynom solving");
 	
 	int deg = 0;
 	
+	LEV_LOG(LL_INFO, "Input poly deg:");
+	
 	std::cin >> deg;
-
+	std::cin.ignore(256, '\n');
+	
 	Polynom poly(deg);
 	
-	LEV_LOG(LL_INFO, "Input poly deg:");
 	
 	LEV_LOG(LL_INFO, "Input coefs (float point, from constant to maximum degree):");
 
 	std::string s_coefs;
 	std::getline(std::cin, s_coefs);
+	//std::cout << s_coefs.size() << std::endl;
 	poly.parse_coefs(s_coefs);
 	
 	int n_roots = poly.find_roots();
@@ -30,7 +33,7 @@ int main(){
 			break;
 		default:
 			LOG("there are " << n_roots << " roots");
-			utility::cout_array<double>(poly.roots);
+			utility::cout_array<double>("Roots", n_roots, poly.roots);
 			break;
 	}
 
