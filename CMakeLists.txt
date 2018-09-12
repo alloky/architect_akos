@@ -4,7 +4,7 @@ project (Akos)
 
 # default compile flags
 set(CMAKE_CXX_FLAGS "-std=c++0x -Wall")
-#set(LOG 0)
+set(LOG 0)
 
 if(LOG)
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLOG")
@@ -57,6 +57,9 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
 endif()
 
 # Now simply link against gtest or gtest_main as needed. Eg
-add_executable(example tests/test.cpp)
-target_link_libraries(example gtest_main)
-add_test(NAME example_test COMMAND example)
+include_directories(src)
+link_directories(src)
+add_executable(mt_test tests/mt_test.cpp src/mathtools.cpp)
+
+target_link_libraries(mt_test gtest_main)
+add_test(NAME mt_test COMMAND mt_test)

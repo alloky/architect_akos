@@ -26,7 +26,6 @@ int solve_linear(double a, double b, double* root){
 */
 int solve_square(double a, double b, double c, double* root_1, double* root_2){
 	
-	LOG(a << " " << b << " " << c);
 	// Check for NaNs
 	assert( a == a );
 	assert( b == b );
