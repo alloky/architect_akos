@@ -11,3 +11,4 @@ MakeFile
 !*.md
 !CMakeLists.txt
 !Doxyfile
+!tests
