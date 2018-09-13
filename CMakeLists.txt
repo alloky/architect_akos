@@ -4,7 +4,7 @@ project (Akos)
 
 # default compile flags
 set(CMAKE_CXX_FLAGS "-std=c++0x -Wall")
-set(LOG 0)
+#set(LOG 0)
 
 if(LOG)
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLOG")

@@ -8,6 +8,7 @@ MakeFile
 !.gitignore
 !*.cpp
 !*.h
+!*.hpp
 !*.md
 !CMakeLists.txt
 !Doxyfile
