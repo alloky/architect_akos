@@ -5,6 +5,7 @@ main
 CMakeFiles/*
 MakeFile
 
+
 !.gitignore
 !*.cpp
 !*.h
@@ -13,3 +14,4 @@ MakeFile
 !CMakeLists.txt
 !Doxyfile
 !tests
+!src
