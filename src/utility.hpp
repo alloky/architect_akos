@@ -5,7 +5,7 @@ namespace utility {
 	
 	template <typename T>
 	void cout_array(const std::string& msg, size_t size, T* arr){
-		std::cout << "# " << msg << "n# ";
+		std::cout << "# " << msg << " #\n# ";
 		for(int i = 0; i < size; ++i){
 			std::cout << arr[i] << " "; 
 		}

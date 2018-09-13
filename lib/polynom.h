@@ -58,6 +58,7 @@ public:
 	 * 
 	 * Roots stored in new allocated array in @link roots @endlink field.
 	 * Roots' multiplicities stored in @link roots_muls  @endlink
+	 * May return @link MT_NOT_IMPL @endlink if deg >= 3
 	 * 
 	 */
 	int find_roots();

@@ -8,6 +8,7 @@ Polynom::Polynom (int n) :
         deg(n),
         coefs(NULL),
         roots(NULL) {
+    assert(n >= 1);
 }
 
 int Polynom::find_roots(){
@@ -19,43 +20,50 @@ int Polynom::find_roots(){
         return _find_roots_square();
     }
 
-    return 0; //_find_roots_newthon();
+    return MT_NOT_IMPL; //_find_roots_newthon();
 
 }
 
 
 int Polynom::_find_roots_linear(){
-    double root = 0;
+    double root = NAN;
     int n_roots = solve_linear(coefs[1], coefs[0], &root);
     switch(n_roots){
         case 0:
             return 0;
+       
         case 1:
             roots = new double[1];
             roots_muls = new char[1];
             roots[0] = root;
             roots_muls[0] = 1;
             return 1;
+       
         case MT_INF_ROOTS:
             return MT_INF_ROOTS;
+
+         default:
+            LEV_LOG(LL_ERR, "mathtools.solve_linear return unknown number of roots");
     }
 }
 
 
 int Polynom::_find_roots_square(){
-    double root_1 = 0.0,
-           root_2 = 0.0;
+    double root_1 = NAN,
+           root_2 = NAN;
 
     int n_roots = solve_square(coefs[2], coefs[1], coefs[0], &root_1, &root_2);
     switch(n_roots){
         case 0:
             return 0;
+
         case 1:
             roots = new double[1];
             roots_muls= new char[1];
             roots[0] = root_1;
             roots_muls[0] = 2;
             return 1;
+       
         case 2:
             roots = new double[2];
             roots_muls = new char[2];
@@ -64,8 +72,12 @@ int Polynom::_find_roots_square(){
             roots_muls[0] = 1;
             roots_muls[1] = 1;
             return 2;
+       
         case MT_INF_ROOTS:
             return MT_INF_ROOTS;
+
+        default:
+            LEV_LOG(LL_ERR, "mathtools.solve_square return unknown number of roots");
     }
 }
 
@@ -89,5 +101,5 @@ Polynom::~Polynom(){
     if(roots_muls != NULL)
     	delete roots_muls;
     if(roots_muls != NULL)
-	delete roots;
+	   delete roots;
 }

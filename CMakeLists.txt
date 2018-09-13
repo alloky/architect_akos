@@ -5,9 +5,11 @@ project (Akos)
 # default compile flags
 set(CMAKE_CXX_FLAGS "-std=c++0x -Wall")
 #set(LOG 0)
+option(LOGMOD "help string describing LOG" OFF)
 
-if(LOG)
+if(LOGMOD)
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLOG")
+else()
 endif()
 
 # include libs

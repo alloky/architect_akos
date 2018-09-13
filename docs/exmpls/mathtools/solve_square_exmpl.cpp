@@ -16,8 +16,8 @@ int main(){
 	double a = 1.0,
 		   b = 0.0,
 		   c = -1.0
-		   root_1 = 0.0,
-		   root_2 = 0.0;
+		   root_1 = NAN,
+		   root_2 = NAN;
 	int n_roots = solve_square(a, b, c, &root_1, &root_2);
 	LOG(n_roots);
 	LOG(root_1);

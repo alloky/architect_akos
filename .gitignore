@@ -5,13 +5,21 @@ main
 CMakeFiles/*
 MakeFile
 
-
+# files formats
 !.gitignore
 !*.cpp
 !*.h
 !*.hpp
 !*.md
+!*.pdf
 !CMakeLists.txt
 !Doxyfile
+
+# Dirs
 !tests
 !src
+!lib
+
+#Exceptions
+!docs/header.tex
+!docs/footer.tex

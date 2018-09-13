@@ -1,6 +1,9 @@
-const int MT_INF_ROOTS = -1;
+#include <math.h>
 
-// ax + b = 0
+const int MT_INF_ROOTS = -1; //!< Infinite number of roots
+const int MT_NOT_IMPL = -2;  //!< Method not implemented
+const double MT_EPS = 1e-6; //!< Epsilon for double comparasion.
+
 
 /**
  * @brief      Solve linear equation
