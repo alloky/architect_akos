@@ -89,7 +89,7 @@ void Polynom::parse_coefs(const std::string& space_sep_coefs){
     assert(coefs != NULL);
 
     for(int i = 0; i < deg + 1; ++i){
-        double cur_coef = 0.0;
+        double cur_coef = NAN;
         stream >> cur_coef;
         coefs[i] = cur_coef;  
     }
