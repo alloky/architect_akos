@@ -12,7 +12,7 @@
 ## Сборка
 
 ```
-    cmake -DLOGMODE=ON .
+    cmake -DLOGMOD=ON .
     make
 ```
 
