@@ -9,12 +9,7 @@ int main(){
 	LEV_LOG(LL_INFO, "Solving eq.  c + bx + ax^2 = 0");
 	
 
-	int deg = 0;
-	
-	LEV_LOG(LL_INFO, "Input poly deg:");
-	
-	std::cin >> deg;
-	std::cin.ignore(256, '\n');
+	int deg = 2;
 	
 	Polynom poly(deg);
 	
@@ -23,7 +18,7 @@ int main(){
 
 	std::string s_coefs;
 	std::getline(std::cin, s_coefs);
-	//std::cout << s_coefs.size() << std::endl;
+
 	poly.parse_coefs(s_coefs);
 	
 	int n_roots = poly.find_roots();
