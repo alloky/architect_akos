@@ -44,6 +44,7 @@ int Polynom::_find_roots_linear(){
 
          default:
             LEV_LOG(LL_ERR, "mathtools.solve_linear return unknown number of roots");
+            return MT_NOT_IMPL;
     }
 }
 
@@ -78,6 +79,7 @@ int Polynom::_find_roots_square(){
 
         default:
             LEV_LOG(LL_ERR, "mathtools.solve_square return unknown number of roots");
+            return MT_NOT_IMPL;
     }
 }
 

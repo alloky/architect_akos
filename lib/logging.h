@@ -32,7 +32,7 @@
  * @brief debug debug level
  */
 #define LL_DEBUG "DEBUG"
-#ifdef LOG
+#ifdef LOGMOD
 
 
 #define LEV_LOG(level, text) if(1) std::cout << level << " : " << text << "\n"

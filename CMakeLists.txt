@@ -8,7 +8,7 @@ set(CMAKE_CXX_FLAGS "-std=c++0x -Wall")
 option(LOGMOD "help string describing LOG" OFF)
 
 if(LOGMOD)
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLOG")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLOGMOD")
 else()
 endif()
 
