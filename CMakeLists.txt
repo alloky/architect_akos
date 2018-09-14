@@ -60,7 +60,6 @@ endif()
 
 # Now simply link against gtest or gtest_main as needed. Eg
 include_directories(src)
-link_directories(src)
 add_executable(mt_test tests/mt_test.cpp src/mathtools.cpp)
 
 target_link_libraries(mt_test gtest_main)

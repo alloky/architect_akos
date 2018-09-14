@@ -5,8 +5,10 @@
 #include "utility.hpp"
 
 int main(){
-	LEV_LOG(LL_INFO, "Tool for polynom solving");
+	LEV_LOG(LL_INFO, "Tool for qaud. eq. solving");
+	LEV_LOG(LL_INFO, "Solving eq.  c + bx + ax^2 = 0");
 	
+
 	int deg = 0;
 	
 	LEV_LOG(LL_INFO, "Input poly deg:");
@@ -17,7 +19,7 @@ int main(){
 	Polynom poly(deg);
 	
 	
-	LEV_LOG(LL_INFO, "Input coefs (float point, from constant to maximum degree):");
+	LEV_LOG(LL_INFO, "Input coefs : c b a ");
 
 	std::string s_coefs;
 	std::getline(std::cin, s_coefs);
