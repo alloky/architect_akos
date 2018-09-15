@@ -7,7 +7,8 @@
 Polynom::Polynom (int n) :
         deg(n),
         coefs(NULL),
-        roots(NULL) {
+        roots(NULL),
+        roots_muls(NULL) {
     assert(n >= 1);
 }
 
@@ -104,6 +105,6 @@ Polynom::~Polynom(){
     	delete coefs;
     if(roots_muls != NULL)
     	delete roots_muls;
-    if(roots_muls != NULL)
+    if(roots != NULL)
 	   delete roots;
 }
