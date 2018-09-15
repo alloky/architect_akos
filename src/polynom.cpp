@@ -85,6 +85,8 @@ int Polynom::_find_roots_square(){
 
 void Polynom::parse_coefs(const std::string& space_sep_coefs){
     
+    assert(space_sep_coefs.size() >= 1);
+
     std::istringstream stream(space_sep_coefs);
     coefs = new double[deg + 1];
 
