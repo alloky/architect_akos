@@ -9,6 +9,6 @@ namespace utility {
 		for(size_t i = 0; i < size; ++i){
 			std::cout << arr[i] << " "; 
 		}
-		std::cout << "\n############";
+		std::cout << "\n############\n";
 	}
 }
