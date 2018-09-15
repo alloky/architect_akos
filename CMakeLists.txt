@@ -8,7 +8,7 @@ set(CMAKE_CXX_FLAGS "-std=c++0x -Wall")
 option(LOGMOD "help string describing LOG" OFF)
 
 if(LOGMOD)
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLOG")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLOGMOD")
 else()
 endif()
 
@@ -60,7 +60,6 @@ endif()
 
 # Now simply link against gtest or gtest_main as needed. Eg
 include_directories(src)
-link_directories(src)
 add_executable(mt_test tests/mt_test.cpp src/mathtools.cpp)
 
 target_link_libraries(mt_test gtest_main)

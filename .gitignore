@@ -13,6 +13,7 @@ MakeFile
 !*.md
 !*.pdf
 !CMakeLists.txt
+!CMakeLists.txt.in
 !Doxyfile
 
 # Dirs

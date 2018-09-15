@@ -10,8 +10,8 @@ TEST(solve_linear_test, sample_test)
     int n  = solve_linear(1, 1, &root_1);
     EXPECT_EQ(n, 1);
     EXPECT_EQ(root_1, -1.0);
-    LOG("THIS IS ROOT");
-    LOG(root_1);
+    // LOG("THIS IS ROOT");
+    // LOG(root_1);
 }
 
 TEST(solve_linear_test, infinite_roots)
@@ -50,6 +50,8 @@ TEST(solve_square_test, no_roots)
 {
 	double root_1 = NAN, root_2 = NAN;
     int n  = solve_square(1, 1, 1, &root_1, &root_2);
+    EXPECT_EQ(n, 0);
+    n  = solve_square(4, 3, 2, &root_1, &root_2);
     EXPECT_EQ(n, 0);
 }
 

@@ -7,7 +7,8 @@
 Polynom::Polynom (int n) :
         deg(n),
         coefs(NULL),
-        roots(NULL) {
+        roots(NULL),
+        roots_muls(NULL) {
     assert(n >= 1);
 }
 
@@ -44,6 +45,7 @@ int Polynom::_find_roots_linear(){
 
          default:
             LEV_LOG(LL_ERR, "mathtools.solve_linear return unknown number of roots");
+            return MT_NOT_IMPL;
     }
 }
 
@@ -78,11 +80,14 @@ int Polynom::_find_roots_square(){
 
         default:
             LEV_LOG(LL_ERR, "mathtools.solve_square return unknown number of roots");
+            return MT_NOT_IMPL;
     }
 }
 
 void Polynom::parse_coefs(const std::string& space_sep_coefs){
     
+    assert(space_sep_coefs.size() >= 1);
+
     std::istringstream stream(space_sep_coefs);
     coefs = new double[deg + 1];
 
@@ -91,7 +96,7 @@ void Polynom::parse_coefs(const std::string& space_sep_coefs){
     for(int i = 0; i < deg + 1; ++i){
         double cur_coef = NAN;
         stream >> cur_coef;
-        coefs[i] = cur_coef;  
+        coefs[deg - i] = cur_coef;  
     }
 }
 
@@ -100,6 +105,6 @@ Polynom::~Polynom(){
     	delete coefs;
     if(roots_muls != NULL)
     	delete roots_muls;
-    if(roots_muls != NULL)
+    if(roots != NULL)
 	   delete roots;
 }
