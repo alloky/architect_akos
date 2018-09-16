@@ -17,14 +17,20 @@ include_directories(lib)
 include_directories(src)
 
 set(SOURCE_FILES src)
+set(TASKS_FILES tasks)
 
 # cmake flags
  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "${SOURCE_FILES}/*.cpp")
-add_executable(main ${SOURCES})
+# Collect sources
+file(GLOB_RECURSE CPP_SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "${SOURCE_FILES}/*.cpp")
+file(GLOB_RECURSE C_SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "${SOURCE_FILES}/*.c")
+
+# Collect execs
+add_executable(task_1 ${CPP_SOURCES} ${C_SOURCES} "tasks/task_1.cpp")
+add_executable(task_2 ${CPP_SOURCES} ${C_SOURCES} "tasks/task_2.cpp")
 
 # Download and unpack googletest at configure time
 configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)

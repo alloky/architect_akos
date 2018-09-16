@@ -21,6 +21,7 @@ MakeFile
 !tests
 !src
 !lib
+!tasks
 
 #Exceptions
 !docs/header.tex

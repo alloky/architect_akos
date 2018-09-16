@@ -1,18 +1,41 @@
 #include "file_tools.h"
+#include <vector>
 
+/**
+ * @brief      FileReader
+ */
 class FileReader {
-	char* buffer;
-	unsigned int total_size;	
+
+	char* buffer; //!< body for file
+	size_t total_size; //! < total size of file in bytes
+
 public:
-	class LineView {
-		char** ptrs;
-		int size;
+	
+	/**
+	 * @brief      Array of lines, mutable
+	 */
+	class LinesView {
 	public:
-		size_t size() const;
-		char* operator[](int i);
+		std::vector<char*> ptrs; //!< array of pointers to lines
+
 	};
 
-	LineView&& make_LineView();
-	FileReader(const char* filename);
+	
+	/**
+	 * @brief Return new LinesView
+	 */
+	LinesView&& make_LineView();
+	
+
+	/**
+	 * @brief      Read file
+	 *
+	 * @param[in]  filename  Path to file
+	 * 
+	 * Read file to internal buffer
+	 */
+	int open(const char* filename);
+
+	FileReader() = default;
 	~FileReader();
 };

@@ -3,17 +3,26 @@
 #include "filereader.h"
 #include "logging.g"
 
+#ifdef WIN
+    #define fr_stat _stat
+    #define fr_open _open
+    #define fr_read _read
+    #define fr_close _close 
+#else
+    #define fr_stat stat
+    #define fr_open open
+    #define fr_read read
+    #define fr_close close 
+#endif
+    
+
 void _mark_ptrs(char** string_arr, char* buffer);
 int _process_error(const char* filename, int code);
 
 int get_file_size(const char* filename){
-    #ifdef WIN
-        struct _stat file_info;
-        status = _stat(filename, file_info);
-    #else
-        struct stat file_info;
-        status = stat(filename, file_info);
-    #endif
+    
+    struct _stat file_info;
+    status = fr_stat(filename, file_info);
     
     int code = errno;
 
@@ -24,9 +33,9 @@ int get_file_size(const char* filename){
     return _process_error(filename, code);
 }
 
-unsigned int get_string_count(const char* buff){
+size_t get_line_count(const char* buff){
     size_t ind = 0;
-    unsigned int count = 0;    
+    size_t count = 0;    
     
     assert(buff != NULL);
 
@@ -40,7 +49,7 @@ unsigned int get_string_count(const char* buff){
     return count + 1; 
 }
 
-int file_to_ptr_arr(const char* filename, char*** string_arr, int* total_size){
+int read_file(const char* filename, char** buffer, int* total_size){
     int file_size = get_file_size(filename);
     
     if(file_size < 0){
@@ -55,27 +64,20 @@ int file_to_ptr_arr(const char* filename, char*** string_arr, int* total_size){
 
     int fd = 0;
     
-    #ifdef WIN
-        fd = _open(filename, _O_RDONLY);
-    #else
-        fd = open(filename, O_RDONLY);
-    #endif
+    fd = fr_open(filename, _O_RDONLY);
     
     if( fd == -1 ){
         int code = errno;
         return _process_error(filename, code);
     }
     
-    char * buffer = new char[file_size + 1];
+    buffer = new char[file_size + 1];
     assert(buffer != NULL);    
     *total_size = file_size;    
 
     int read_size = 0;
-    #ifdef WIN
-        read_size = _read(fd, buffer, file_size);
-    #else
-        read_size = read(fd, buffer, file_size);
-    #endif
+    read_size = fr_read(fd, buffer, file_size);
+    fr_close(fd);
 
     if(read_size == 0){
         LEV_LOG(LL_ERR, "File \"" << filename << "\" is empy");
@@ -84,19 +86,23 @@ int file_to_ptr_arr(const char* filename, char*** string_arr, int* total_size){
     } else if(read_size == -1){
         int code = errno;
         delete buffer;
-        return _process_error(filename, code;
+        return _process_error(filename, code);
     }
     
-    unsigned int s_count = get_string_count(buffer);
-    assert(string_arr != NULL); 
-    *string_arr = new char*[s_count];
+    buff[read_size - 1] = '\0';
 
-    _mark_ptrs(string_arr, buffer); 
-    
+    return 0;
+}
+
+size_t make_ptr_arr(const char* buffer, char** ptr_arr){
+    size_t s_count = get_line_count(buffer);
+    assert(string_arr != NULL); 
+    ptr_arr = new char*[s_count];
+    _mark_ptrs(buffer, ptr_arr); 
     return s_count;
 }
 
-void _mark_ptrs(char** string_arr, char* buffer){
+void _mark_ptrs(char* buffer, char** string_arr){
     char* cur = buffer;
     size_t i = 0;
     while(*cur != '\0'){
