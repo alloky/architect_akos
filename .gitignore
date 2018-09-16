@@ -8,6 +8,7 @@ MakeFile
 # files formats
 !.gitignore
 !*.cpp
+!*.c
 !*.h
 !*.hpp
 !*.md
