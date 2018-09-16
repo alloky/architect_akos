@@ -24,7 +24,7 @@ public:
 	/**
 	 * @brief Return new LinesView
 	 */
-	LinesView&& make_LineView();
+	LinesView&& make_LinesView();
 	
 
 	/**

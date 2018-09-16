@@ -1,7 +1,7 @@
 #include <assert.h>
 
-#include "filereader.h"
-#include "logging.g"
+#include "file_tools.h"
+#include "logging.h"
 
 #ifdef WIN
     #define fr_stat _stat
@@ -16,13 +16,13 @@
 #endif
     
 
-void _mark_ptrs(char** string_arr, char* buffer);
+void _mark_ptrs(char* buffer, char** string_arr);
 int _process_error(const char* filename, int code);
 
 int get_file_size(const char* filename){
     
     struct _stat file_info;
-    status = fr_stat(filename, file_info);
+    int status = fr_stat(filename, &file_info);
     
     int code = errno;
 
@@ -33,10 +33,11 @@ int get_file_size(const char* filename){
     return _process_error(filename, code);
 }
 
-size_t get_line_count(const char* buff){
+size_t get_lines_count(const char* buff){
     size_t ind = 0;
     size_t count = 0;    
-    
+
+
     assert(buff != NULL);
 
     while(buff[ind] != '\0'){
@@ -46,10 +47,11 @@ size_t get_line_count(const char* buff){
         ++ind;
     }
     
+    std::cout << "g" << std::endl;    
     return count + 1; 
 }
 
-int read_file(const char* filename, char** buffer, int* total_size){
+int read_file(const char* filename, char** buffer, size_t* total_size){
     int file_size = get_file_size(filename);
     
     if(file_size < 0){
@@ -71,12 +73,13 @@ int read_file(const char* filename, char** buffer, int* total_size){
         return _process_error(filename, code);
     }
     
-    buffer = new char[file_size + 1];
-    assert(buffer != NULL);    
+    assert(buffer != NULL);
+    *buffer = new char[file_size + 1];
+    assert(*buffer != NULL);    
     *total_size = file_size;    
 
     int read_size = 0;
-    read_size = fr_read(fd, buffer, file_size);
+    read_size = fr_read(fd, *buffer, file_size);
     fr_close(fd);
 
     if(read_size == 0){
@@ -89,15 +92,16 @@ int read_file(const char* filename, char** buffer, int* total_size){
         return _process_error(filename, code);
     }
     
-    buff[read_size - 1] = '\0';
-
+    *(*buffer + (read_size - 1)) = '\0';
+    LEV_LOG(LL_INFO, "Read " << read_size << " bytes" << *buffer);
     return 0;
 }
 
-size_t make_ptr_arr(const char* buffer, char** ptr_arr){
-    size_t s_count = get_line_count(buffer);
-    assert(string_arr != NULL); 
-    ptr_arr = new char*[s_count];
+size_t make_ptr_arr( char* buffer, char** ptr_arr){
+    LEV_LOG(LL_DEBUG, "Here" << buffer);
+    size_t s_count = get_lines_count(buffer);
+    ptr_arr = new char*[s_count + 1];
+    assert(ptr_arr != NULL); 
     _mark_ptrs(buffer, ptr_arr); 
     return s_count;
 }
@@ -105,19 +109,20 @@ size_t make_ptr_arr(const char* buffer, char** ptr_arr){
 void _mark_ptrs(char* buffer, char** string_arr){
     char* cur = buffer;
     size_t i = 0;
+    string_arr[0] = buffer;
     while(*cur != '\0'){
-        string_arr[i] = cur;
-        while(*cur != '\n'){
-            ++cur;
+        if(*cur != '\n'){
+            string_arr[i] = cur + 1;
+            *cur = '\0';
+            ++i;
         }
-        *cur = '\0';
-        ++i;
         ++cur;
     }
+    string_arr[i] = 0;
 }
 
 int _process_error(const char* filename, int code){
-  	LEV_LOG(LL_ERR, "While reading file \"" << filename "\" error occured");
+  	LEV_LOG(LL_ERR, "While reading file \"" << filename << "\" error occured");
     LEV_LOG(LL_ERR, strerror(code));
 
     if(code == ENOENT){

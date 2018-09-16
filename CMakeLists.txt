@@ -1,14 +1,20 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 3.1)
 
 project (Akos)
 
 # default compile flags
-set(CMAKE_CXX_FLAGS "-std=c++0x -Wall")
+set(CMAKE_CXX_FLAGS "-std=c++11 -Wall")
+set (CMAKE_CXX_STANDARD 11)
 #set(LOG 0)
 option(LOGMOD "help string describing LOG" OFF)
 
 if(LOGMOD)
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLOGMOD")
+else()
+endif()
+
+if(WINSYS)
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DWIN")
 else()
 endif()
 

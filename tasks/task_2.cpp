@@ -7,8 +7,15 @@ int main(){
 	LOG("Programm to read files by lines");
 
 	FileReader fr;
-	int status = fr.open("text.txt");
+	int status = fr.open("data/text.txt");
 
-	auto lv = fr.make_LineView();
-	LOG("Number of lines " << lv.ptrs.size());
+	LEV_LOG(LL_DEBUG, "status : " << status);
+
+	auto lv = fr.make_LinesView();
+	for(auto t : lv.ptrs){
+		LOG(t);
+	}
+
+	LOG("Number of lines ");
+	LOG(lv.ptrs.size());
 }

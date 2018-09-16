@@ -1,15 +1,16 @@
 #include <stdio.h>
 
 #include <sys/stat.h>
+#include <sys/types.h>
 #include <io.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <errno.h>
-#include <types.h>
 #include <string.h>
 
 const int FR_NOT_FOUND = -1; //!< FileNotFound error num
-const int FR_READ_ERROR = -2; //!< Error while reading num
-const int FR_EMPY_FILE = -3; //!< Empty file error num
+const int FR_READ_ERR = -2; //!< Error while reading num
+const int FR_EMPTY_FILE = -3; //!< Empty file error num
 
 
 /**
@@ -40,7 +41,7 @@ size_t get_lines_count(const char* buff);
  *
  * @return     status code, 0 if OK
  */
-int read_file(const char* filename, char** buffer, int* total_size);
+int read_file(const char* filename, char** buffer, size_t* total_size);
 
 /**
  * @brief      Makes a pointer arr.
@@ -50,4 +51,4 @@ int read_file(const char* filename, char** buffer, int* total_size);
  *
  * @return     line count
  */
-size_t make_ptr_arr(const char* buffer, char*** ptr_arr);
+size_t make_ptr_arr(char* buffer, char** ptr_arr);
