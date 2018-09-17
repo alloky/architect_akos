@@ -51,4 +51,4 @@ int read_file(const char* filename, char** buffer, size_t* total_size);
  *
  * @return     line count
  */
-size_t make_ptr_arr(char* buffer, char** ptr_arr);
+size_t make_ptr_arr(char* buffer, char*** ptr_arr);
