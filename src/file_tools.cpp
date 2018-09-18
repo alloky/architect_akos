@@ -4,15 +4,23 @@
 #include "logging.h"
 
 #ifdef WIN
+    #include <io.h>
     #define fr_stat _stat
     #define fr_open _open
     #define fr_read _read
-    #define fr_close _close 
+    #define fr_write _write
+    #define fr_close _close
+    #define FR_RDONLY _O_RDONLY 
+    #define FR_WRTCREAT (_O_RDWR | _O_CREAT)
 #else
+    #include <unistd.h>
     #define fr_stat stat
     #define fr_open open
     #define fr_read read
+    #define fr_write write
     #define fr_close close 
+    #define FR_RDONLY O_RDONLY
+    #define FR_WRTCREAT (O_RDWR | O_CREAT)
 #endif
     
 
@@ -65,7 +73,7 @@ int read_file(const char* filename, char** buffer, size_t* total_size){
 
     int fd = 0;
     
-    fd = fr_open(filename, _O_RDONLY);
+    fd = fr_open(filename, FR_RDONLY);
     
     if( fd == -1 ){
         int code = errno;
@@ -92,6 +100,75 @@ int read_file(const char* filename, char** buffer, size_t* total_size){
     }
     
     *(*buffer + (read_size)) = '\0';
+    return 0;
+}
+
+int write_to_file(const char* filename, char* buffer, unsigned int size){
+    
+    int fd = 0;
+    
+    fd = fr_open(filename, FR_WRTCREAT);
+    
+    if( fd == -1 ){
+        int code = errno;
+        return _process_error(filename, code);
+    }
+    
+    assert(buffer != NULL);    
+
+    for(char* cur = buffer; cur < buffer + size; ++cur){
+        if(*cur == '\0'){
+            *cur = '\n';
+        }
+    }
+    
+    int write_size = 0;
+    write_size = fr_write(fd, buffer, size);
+    fr_close(fd);
+    
+    int ret_code = 0;
+
+    if(write_size == -1){
+        int code = errno;
+        ret_code = _process_error(filename, code);
+    }
+
+    for(char* cur = buffer; cur < buffer + size; ++cur){
+        if(*cur == '\n'){
+            *cur = '\0';
+        }
+    }
+
+    return ret_code;
+}
+
+int multi_write(const char* filename, char** ptr_arr, size_t size){
+    
+    assert(ptr_arr != NULL);
+
+    int fd = 0;
+    fd = fr_open(filename, FR_WRTCREAT);
+    if( fd == -1 ){
+        int code = errno;
+        return _process_error(filename, code);
+    }
+
+    for(size_t i = 0; i < size; ++i){
+        assert(ptr_arr[i] != NULL);
+        int len = strlen(ptr_arr[i]);
+        ptr_arr[i][len] = '\n';
+        if((fr_write(fd, ptr_arr[i], len)) != 0){
+            int code = errno;
+            return _process_error(filename, code);
+        }
+        ptr_arr[i][len] = '\0';
+    }
+
+    if(fr_close(fd) != 0){
+        int code = errno;
+        return _process_error(filename, code);   
+    }
+
     return 0;
 }
 

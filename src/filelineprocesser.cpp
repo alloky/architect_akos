@@ -1,10 +1,10 @@
 
-#include "filereader.h"
+#include "filelineprocesser.h"
 #include "logging.h"
 
 
 
-FileReader::LinesView* FileReader::make_LinesView(){
+FileLineProcesser::LinesView* FileLineProcesser::make_LinesView(){
 	LinesView* lv = new LinesView();
 	char** ptr_arr = NULL;
 	size_t lines_count = get_lines_count(buffer);
@@ -13,7 +13,19 @@ FileReader::LinesView* FileReader::make_LinesView(){
 	return lv;
 }
 
-int FileReader::open(const char* filename){
+int FileLineProcesser::LinesView::write(const char* filename){
+	/*
+		Alphabet sorting and writting to file
+	*/	
+	LEV_LOG(LL_INFO, "Writitng file to output...");
+	int ret = multi_write(filename, &(ptrs[0]), ptrs.size());
+	LEV_LOG(LL_INFO, "Done");
+	return ret;
+}
+
+
+
+int FileLineProcesser::read(const char* filename){
 	if(buffer != NULL)
 		delete buffer;
 	int ret = read_file(filename, &buffer, &total_size);
@@ -21,13 +33,20 @@ int FileReader::open(const char* filename){
 	return ret;
 }
 
-void FileReader::LinesView::print_top_non_empty(size_t size){
+int FileLineProcesser::write(const char* filename){
+	if(buffer == NULL){
+		return -1;
+	}
+	return write_to_file(filename, buffer, total_size);
+}
+
+void FileLineProcesser::LinesView::print_top_non_empty(size_t size){
   auto min_l = std::min((size_t)size, (size_t)ptrs.size());
 
   LEV_LOG(LL_INFO, "Top " << min_l << " non-empty lines");
 
   for (size_t i = 0, j = 0; i < min_l; ++j) {
-  	if(ptrs[j][0] >= 'A' && ptrs[j][0] <= 'H') {
+  	if(strlen(ptrs[j]) >= 10) {
   		std::cout << ptrs[j] << "\n";
   		++i;
   	}
@@ -35,7 +54,7 @@ void FileReader::LinesView::print_top_non_empty(size_t size){
 }
 
 
-void FileReader::LinesView::sort(){
+void FileLineProcesser::LinesView::sort(){
   std::sort(ptrs.begin(), ptrs.end(),
     [] (const char* s1, const char* s2){
     if(s1[0] == '\0' && s2[0] == '\0'){
@@ -67,7 +86,7 @@ void FileReader::LinesView::sort(){
 }
 
 
-void FileReader::LinesView::sort_backwise(){
+void FileLineProcesser::LinesView::sort_backwise(){
   std::sort(ptrs.begin(), ptrs.end(),
     [] (const char* s1, const char* s2){
     size_t len_1 = strlen(s1);
@@ -101,22 +120,22 @@ void FileReader::LinesView::sort_backwise(){
 
 }
 
-bool FileReader::LinesView::_is_prep(char c){
+bool FileLineProcesser::LinesView::_is_prep(char c){
 	switch(c){
-		case '.': case ';': case ',': case '!': case '?': 
+		case '.': case ';': case ',': case '!': case '?': case '[' : case ']' :
 			return true;
 		default:
 			return false;
 	}
 }
 
-FileReader::FileReader() :
+FileLineProcesser::FileLineProcesser() :
  buffer(NULL),
  total_size(0) {
 
  }
 
-FileReader::~FileReader(){
+FileLineProcesser::~FileLineProcesser(){
 	if(buffer != NULL)
 		delete buffer;
 }

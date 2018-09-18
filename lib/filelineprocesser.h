@@ -3,9 +3,9 @@
 #include <algorithm>
 
 /**
- * @brief      FileReader
+ * @brief      FileLineProcesser
  */
-class FileReader {
+class FileLineProcesser {
 
 	char* buffer; //!< body for file
 	size_t total_size; //! < total size of file in bytes
@@ -37,6 +37,11 @@ public:
 		 */
 		void sort_backwise();
 
+		/**
+		 * @brief      Write lines to file
+		 */
+		int write(const char* filename);
+
 		LinesView()  = default; //!< default constructor
 		
 		~LinesView() = default; //!< default destructor
@@ -56,10 +61,21 @@ public:
 	 *
 	 * @param[in]  filename  Path to file
 	 * 
+	 * @return     status code, 0 if OK
+	 * 
 	 * Read file to internal buffer
 	 */
-	int open(const char* filename);
+	int read(const char* filename);
 
-	FileReader();
-	~FileReader();
+	/**
+	 * @brief      Writes to file, creates it if not_exists 
+	 *
+	 * @param[in]  filename  path to file
+	 *
+	 * @return     status code, 0 if OK
+	 */
+	int write(const char* filename);
+
+	FileLineProcesser();
+	~FileLineProcesser();
 };

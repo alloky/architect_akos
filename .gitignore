@@ -26,3 +26,4 @@ MakeFile
 #Exceptions
 !docs/header.tex
 !docs/footer.tex
+!data/onegin.txt

@@ -2,7 +2,6 @@
 
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <io.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <errno.h>
@@ -36,12 +35,37 @@ size_t get_lines_count(const char* buff);
  * @brief      Read file to buffer
  *
  * @param[in]  filename    Path to file
- * @param      buffer	   Buffer for whole file
+ * @param      buffer      Buffer for whole file
  * @param      total_size  Var for file size
  *
  * @return     status code, 0 if OK
  */
 int read_file(const char* filename, char** buffer, size_t* total_size);
+
+
+/**
+ * @brief      Writes to file, creates it if not_exists.
+ *
+ * @param[in]  filename  filename
+ * @param      buffer    buffer
+ * @param[in]  size      size
+ *
+ * @return     status code, 0 if ok
+ * 
+ * Changes '\0' to '\n' while writting and back to '\0' after
+ */
+int write_to_file(const char* filename, char* buffer, unsigned int size);
+
+/**
+ * @brief      Writes ptr_arr to file
+ *
+ * @param[in]  filename  The filename
+ * @param      ptr_arr   The pointer arr
+ * @param[in]  size      The size
+ *
+ * @return     status code
+ */
+int multi_write(const char* filename, char** ptr_arr, size_t size);
 
 /**
  * @brief      Makes a pointer arr.
