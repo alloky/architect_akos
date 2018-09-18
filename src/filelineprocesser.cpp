@@ -41,16 +41,18 @@ int FileLineProcesser::write(const char* filename){
 }
 
 void FileLineProcesser::LinesView::print_top_non_empty(size_t size){
-  auto min_l = std::min((size_t)size, (size_t)ptrs.size());
+	auto min_l = std::min((size_t)size, (size_t)ptrs.size());
 
-  LEV_LOG(LL_INFO, "Top " << min_l << " non-empty lines");
+	LEV_LOG(LL_INFO, "Top " << min_l << " non-empty lines\n");
 
-  for (size_t i = 0, j = 0; i < min_l; ++j) {
-  	if(strlen(ptrs[j]) >= 10) {
-  		std::cout << ptrs[j] << "\n";
-  		++i;
-  	}
-  }
+	for (size_t i = 0, j = 0; i < min_l; ++j) {
+		if(strlen(ptrs[j]) >= 10) {
+			std::cout << ptrs[j] << "\n";
+			++i;
+		}
+	}
+
+	LEV_LOG(LL_INFO, "End\n");
 }
 
 
@@ -61,10 +63,10 @@ void FileLineProcesser::LinesView::sort(){
     	return false;
     }
     if(s1[0] == '\0'){
-    	return false;
+    	return true;
     }
     if(s2[0] == '\0'){
-    	return true;
+    	return false;
     }
    	for (size_t i = 0, j = 0; s1[i] != '\0' && s2[i] != '\0';) {
       if(_is_prep(s1[i])){
@@ -75,13 +77,16 @@ void FileLineProcesser::LinesView::sort(){
       	++j;
       	continue;
       }
-      if (s1[i] >= s2[j]) {
+      if (s1[i] > s2[j]) {
         return false;
+      }
+      if(s1[i] < s2[j]){
+      	return true;
       }
       ++i;
       ++j;
     }
-    return true;
+    return false;
   });
 }
 
@@ -89,18 +94,9 @@ void FileLineProcesser::LinesView::sort(){
 void FileLineProcesser::LinesView::sort_backwise(){
   std::sort(ptrs.begin(), ptrs.end(),
     [] (const char* s1, const char* s2){
-    size_t len_1 = strlen(s1);
-    size_t len_2 = strlen(s2);
-    if(len_1 == 0 && len_2 == 0){
-    	return false;
-    }
-    if(len_1 == 0){
-    	return false;
-    }
-    if(len_2 == 0){
-    	return true;
-    }
-    for (size_t i = len_1 - 1, j = len_2 - 1; i >= 0 && j >= 0;) {
+    int len_1 = strlen(s1);
+    int len_2 = strlen(s2);
+    for (int i = len_1 - 1, j = len_2 - 1; i >= 0 && j >= 0;) {
       if(_is_prep(s1[i])){
       	--i;
       	continue;
@@ -109,20 +105,29 @@ void FileLineProcesser::LinesView::sort_backwise(){
       	--j;
       	continue;
       }
-      if (s1[i] >= s2[j]) {
+      if (s1[i] > s2[j]) {
         return false;
+      }
+      if(s1[i] < s2[j]){
+      	return true;
       }
       --i;
       --j;
     }
-    return true;
+    return false;
   });
 
 }
 
 bool FileLineProcesser::LinesView::_is_prep(char c){
 	switch(c){
-		case '.': case ';': case ',': case '!': case '?': case '[' : case ']' :
+		case '.': case ';': case ',': case '!': case '?':
+		case '[' : case ']' : case '(' : case ')' :
+		case '"' : case ' ' : case '\'' :
+		case '-' :
+		case '0' : case '1' : case '2' :
+		case '3' : case '4' : case '5' :
+		case '6' : case '7' : case '9' :
 			return true;
 		default:
 			return false;

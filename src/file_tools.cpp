@@ -11,7 +11,8 @@
     #define fr_write _write
     #define fr_close _close
     #define FR_RDONLY _O_RDONLY 
-    #define FR_WRTCREAT (_O_RDWR | _O_CREAT)
+    #define FR_WRTCREAT (_O_WRONLY | O_CREAT)
+    #define FR_RULES 0777//(_S_IREAD | _S_IWRITE)
 #else
     #include <unistd.h>
     #define fr_stat stat
@@ -20,7 +21,8 @@
     #define fr_write write
     #define fr_close close 
     #define FR_RDONLY O_RDONLY
-    #define FR_WRTCREAT (O_RDWR | O_CREAT)
+    #define FR_RULES (S_IRUSR | S_IWUSR)
+    #define FR_WRTCREAT (O_TRUNC | O_CREAT)
 #endif
     
 
@@ -147,7 +149,7 @@ int multi_write(const char* filename, char** ptr_arr, size_t size){
     assert(ptr_arr != NULL);
 
     int fd = 0;
-    fd = fr_open(filename, FR_WRTCREAT);
+    fd = fr_open(filename, FR_WRTCREAT, FR_RULES);
     if( fd == -1 ){
         int code = errno;
         return _process_error(filename, code);
@@ -157,7 +159,7 @@ int multi_write(const char* filename, char** ptr_arr, size_t size){
         assert(ptr_arr[i] != NULL);
         int len = strlen(ptr_arr[i]);
         ptr_arr[i][len] = '\n';
-        if((fr_write(fd, ptr_arr[i], len)) != 0){
+        if((fr_write(fd, ptr_arr[i], len + 1)) == -1){
             int code = errno;
             return _process_error(filename, code);
         }
