@@ -21,8 +21,8 @@
     #define fr_write write
     #define fr_close close 
     #define FR_RDONLY O_RDONLY
-    #define FR_RULES (S_IRUSR | S_IWUSR)
-    #define FR_WRTCREAT (O_TRUNC | O_CREAT)
+    #define FR_RULES 0777
+    #define FR_WRTCREAT (O_WRONLY | O_CREAT)
 #endif
     
 
@@ -31,7 +31,7 @@ int _process_error(const char* filename, int code);
 
 int get_file_size(const char* filename){
     
-    struct _stat file_info;
+    struct fr_stat file_info;
     int status = fr_stat(filename, &file_info);
     
     int code = errno;

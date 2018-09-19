@@ -41,8 +41,10 @@ public:
 		 * @brief      Write lines to file
 		 */
 		int write(const char* filename);
+		
+		LinesView* generate_bread(size_t p_count);
 
-		LinesView()  = default; //!< default constructor
+		LinesView() = default; //!< default constructor
 		
 		~LinesView() = default; //!< default destructor
 	private:
