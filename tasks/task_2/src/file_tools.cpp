@@ -11,8 +11,8 @@
     #define fr_write _write
     #define fr_close _close
     #define FR_RDONLY _O_RDONLY 
+    #define FR_RULES 0777
     #define FR_WRTCREAT (_O_WRONLY | O_CREAT)
-    #define FR_RULES 0777//(_S_IREAD | _S_IWRITE)
 #else
     #include <unistd.h>
     #define fr_stat stat
@@ -24,7 +24,8 @@
     #define FR_RULES 0777
     #define FR_WRTCREAT (O_WRONLY | O_CREAT)
 #endif
-    
+
+
 
 void _mark_ptrs(char* buffer, char** string_arr);
 int _process_error(const char* filename, int code);

@@ -43,6 +43,7 @@ size_t get_lines_count(const char* buff);
 int read_file(const char* filename, char** buffer, size_t* total_size);
 
 
+
 /**
  * @brief      Writes to file, creates it if not_exists.
  *
