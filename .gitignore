@@ -17,15 +17,21 @@ MakeFile
 !CMakeLists.txt.in
 !Doxyfile
 
+!*/
+
 # Dirs
 !tasks/task_1/
-!tasks/task_1/include
-!tasks/task_1/src
-!tasks/task_1/tests
+!tasks/task_1/include/*
+!tasks/task_1/src/*
+!tasks/task_1/tests/*
 
-!tasks/task_2/
-!tasks/task_2/include
-!tasks/task_2/src
+!tasks/task_2/*
+!tasks/task_2/include/*
+!tasks/task_2/src/*
+
+!utility/*
+!utility/include/*
+!utility/src/*
 
 #Exceptions
 !docs/header.tex
