@@ -1,14 +1,19 @@
-#include "file_tools.h"
 #include <vector>
 #include <algorithm>
+
+#include "file_tools.h"
+#include "my_string_view.h"
+
+using string_view = my_string_view;
 
 /**
  * @brief      FileLineProcesser
  */
 class FileLineProcesser {
 
-	char* buffer; //!< body for file
-	size_t total_size; //! < total size of file in bytes
+	SmartDescriptor sfd; //!< fd for io ops
+	char* buffer; //!< buffer for whole file
+	size_t total_size; //!< size of file in bytes
 
 public:
 	
@@ -17,7 +22,7 @@ public:
 	 */
 	class LinesView {
 	public:
-		std::vector<char*> ptrs; //!< array of pointers to lines
+		std::vector<string_view> lines; //!< array of pointers to lines
 		
 
 		/**
@@ -26,6 +31,10 @@ public:
 		 * @param[in]  size  The size
 		 */
 		void print_top_non_empty(size_t size);
+		
+		LinesView() = default; //!< default constructor
+		
+		~LinesView() = default; //!< default destructor
 
 		/**
 		 * @brief      sort ptrs as strings
@@ -36,17 +45,9 @@ public:
 		 * @brief      Sort using reverse order
 		 */
 		void sort_backwise();
-
-		/**
-		 * @brief      Write lines to file
-		 */
-		int write(const char* filename);
 		
 		LinesView* generate_bread(size_t p_count);
-
-		LinesView() = default; //!< default constructor
-		
-		~LinesView() = default; //!< default destructor
+	
 	private:
 		static bool _is_prep(char c);
 	};
@@ -59,6 +60,15 @@ public:
 	
 
 	/**
+	 * @brief      Opens file for io 
+	 *
+	 * @param[in]  filename  The filename
+	 *
+	 * @return     status code, 0 if OK
+	 */
+	int open(const char* filename);
+
+	/**
 	 * @brief      Read file
 	 *
 	 * @param[in]  filename  Path to file
@@ -67,7 +77,7 @@ public:
 	 * 
 	 * Read file to internal buffer
 	 */
-	int read(const char* filename);
+	int read();
 
 	/**
 	 * @brief      Writes to file, creates it if not_exists 
@@ -76,7 +86,7 @@ public:
 	 *
 	 * @return     status code, 0 if OK
 	 */
-	int write(const char* filename);
+	int write(const LinesView& lv, char sep = '\n');
 
 	FileLineProcesser();
 	~FileLineProcesser();
