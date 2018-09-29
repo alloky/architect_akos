@@ -1,8 +1,10 @@
 #include <vector>
+#include <string<
 #include <algorithm>
 
 #include "file_tools.h"
 #include "my_string_view.h"
+#include "smart_descriptor.h"
 
 using string_view = my_string_view;
 
@@ -12,8 +14,8 @@ using string_view = my_string_view;
 class FileLineProcesser {
 
 	SmartDescriptor sfd; //!< fd for io ops
-	char* buffer; //!< buffer for whole file
-	size_t total_size; //!< size of file in bytes
+	string_view data; //!< whole file in memory
+	LinesView* precalc_ptrs; //!< lines ptrs
 
 public:
 	
@@ -32,6 +34,17 @@ public:
 		 */
 		void print_top_non_empty(size_t size);
 		
+
+		/**
+		 * @brief      Writes to file, creates it if not_exists 
+		 *
+		 * @param[in]  filename  path to file
+		 *
+		 * @return     status code, 0 if OK
+		 */
+		int write(const std::string& path, char sep = '\n');
+
+
 		LinesView() = default; //!< default constructor
 		
 		~LinesView() = default; //!< default destructor
@@ -77,16 +90,7 @@ public:
 	 * 
 	 * Read file to internal buffer
 	 */
-	int read();
-
-	/**
-	 * @brief      Writes to file, creates it if not_exists 
-	 *
-	 * @param[in]  filename  path to file
-	 *
-	 * @return     status code, 0 if OK
-	 */
-	int write(const LinesView& lv, char sep = '\n');
+	int read_lines();
 
 	FileLineProcesser();
 	~FileLineProcesser();

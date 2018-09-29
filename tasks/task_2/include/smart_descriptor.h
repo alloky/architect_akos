@@ -45,7 +45,7 @@ public:
 	 *
 	 * @return     status code, 0 if OK
 	 */
-	int write(string_view& s_view);
+	int write(string_view& s_view, char sep='\n');
 	
 	/**
 	 * @brief      closes file

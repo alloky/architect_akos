@@ -18,6 +18,11 @@ MakeFile
 !Doxyfile
 
 !*/
+gtest/*
+googletest-src
+googletest-download/*
+CMakeFiles/*
+
 
 # Dirs
 !tasks/task_1/

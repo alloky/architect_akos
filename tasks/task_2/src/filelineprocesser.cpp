@@ -6,38 +6,53 @@
 
 FileLineProcesser::LinesView* FileLineProcesser::make_LinesView(){
 	LinesView* lv = new LinesView();
-	char** ptr_arr = NULL;
-	size_t lines_count = get_lines_count(buffer);
-	size_t size = make_ptr_arr(buffer, &ptr_arr);
-	lv->ptrs = std::vector<char*>(ptr_arr, ptr_arr + size);
+	
+	if(precalc_ptrs == NULL){
+		char** ptr_arr = NULL;
+		size_t lines_count = get_lines_count(buffer);
+		size_t size = make_ptr_arr(buffer, &ptr_arr);
+		lv->lines = std::vector<string_view>(size);	
+		for(size_t i = 0; i < size; ++i){
+			lv->lines[i] = string_view(ptr_arr[i], strlen(ptr_arr[i]));
+		}
+	}
+
+	*lv = *precalc_ptrs;
+
 	return lv;
 }
 
-int FileLineProcesser::LinesView::write(const char* filename){
-	/*
-		Alphabet sorting and writting to file
-	*/	
-	LEV_LOG(LL_INFO, "Writitng file to output...");
-	int ret = multi_write(filename, &(ptrs[0]), ptrs.size());
+int FileLineProcesser::LinesView::write(const string& path, char sep='\n'){
+	LEV_LOG(LL_INFO, "Writitng lines to file : " << path);
+
+	SmartDescriptor temp_fd;	
+	int status = temp_fd.open(path);
+	if(status != 0){
+		return status;
+	}
+	
+	for(auto& line : lines){
+		if((status = temp_fd.write(line, sep)) != 0){
+			return status;
+		}
+	}
+	temp_fd.close();
+
 	LEV_LOG(LL_INFO, "Done");
 	return ret;
 }
 
+int FileLineProcesser::open(const char* path){
 
-
-int FileLineProcesser::read(const char* filename){
-	if(buffer != NULL)
-		delete buffer;
-	int ret = read_file(filename, &buffer, &total_size);
-	return ret;
+	return sfd.open(path);
 }
 
-int FileLineProcesser::write(const char* filename){
-	if(buffer == NULL){
-		return -1;
-	}
-	return write_to_file(filename, buffer, total_size);
+int FileLineProcesser::read(){
+	if(data.buff != NULL)
+		delete data.buff;
+	return sfd.read_all(filename, &data.buff, &data.size);
 }
+
 
 void FileLineProcesser::LinesView::print_top_non_empty(size_t size){
 	auto min_l = std::min((size_t)size, (size_t)ptrs.size());
@@ -72,7 +87,8 @@ bool FileLineProcesser::LinesView::_is_prep(char c){
 
 FileLineProcesser::FileLineProcesser() :
  buffer(NULL),
- total_size(0) {
+ total_size(0),
+ precalc_ptrs(NULL) {
 
  }
 
