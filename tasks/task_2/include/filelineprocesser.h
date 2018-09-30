@@ -49,8 +49,6 @@ public:
 		LinesView(const LinesView&) = default;
 		~LinesView() = default; //!< default destructor
 
-	private:
-		static bool _is_prep(char c);
 	};
 
 	

@@ -15,7 +15,7 @@ class SmartDescriptor {
 public:
 	
 	/**
-	 * @brief      Opens file for WO ops
+	 * @brief      Opens file for read ops
 	 *
 	 * @param[in]  path  path
 	 *
@@ -25,31 +25,26 @@ public:
 	
 
 	/**
-	 * @brief      Opens file for WO ops
+	 * @brief      Opens file for write ops
 	 *
 	 * @param[in]  path  path
 	 *
 	 * @return     status code, 0 if OK
+	 * 
+	 * Creates file if not exist
 	 */
 	int open_write(const std::string& path);
 	
-
 	/**
-	 * @brief      Reads from opened file
+	 * @brief      Reads all bytes file
 	 *
-	 * @param      s_view  The s_viewer
-	 * @param[in]  len   The length
+	 * @param      buff  buffer
+	 * @param      size  size
 	 *
 	 * @return     status code, 0 if OK
-	 */
-	int read(string_view* s_view, size_t len);
-	
-	/**
-	 * @brief      Reads all file
-	 *
-	 * @param      s_view  The s_viewer
-	 *
-	 * @return     status code, 0 if OK
+	 * 
+	 * Allocates buffer and sets size
+	 * 
 	 */
 	int read_all(char** buff, size_t* size);
 
