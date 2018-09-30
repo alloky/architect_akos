@@ -98,4 +98,7 @@ FileLineProcesser::FileLineProcesser() :
  }
 
 FileLineProcesser::~FileLineProcesser(){
+	if(buff != NULL){
+		delete buff;
+	}
 }
