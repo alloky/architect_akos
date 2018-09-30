@@ -98,7 +98,6 @@ FileLineProcesser::FileLineProcesser() :
  }
 
 FileLineProcesser::~FileLineProcesser(){
-	if(buff != NULL){
-		delete buff;
-	}
+	if(buff != NULL) delete buff;
+	if(precalced_lv != NULL) delete precalced_lv;
 }
