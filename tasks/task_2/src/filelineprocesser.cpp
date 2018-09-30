@@ -7,26 +7,26 @@
 FileLineProcesser::LinesView* FileLineProcesser::make_LinesView(){
 	LinesView* lv = new LinesView();
 	
-	if(precalc_ptrs == NULL){
+	if(precalced_lv == NULL){
+		precalced_lv = new LinesView();
 		char** ptr_arr = NULL;
-		size_t lines_count = get_lines_count(buffer);
-		size_t size = make_ptr_arr(buffer, &ptr_arr);
-		lv->lines = std::vector<string_view>(size);	
+		size_t size = make_ptr_arr(buff, &ptr_arr);
+		precalced_lv->lines = std::vector<string_view>(size);	
 		for(size_t i = 0; i < size; ++i){
-			lv->lines[i] = string_view(ptr_arr[i], strlen(ptr_arr[i]));
+			precalced_lv->lines[i] = string_view(ptr_arr[i], strlen(ptr_arr[i]));
 		}
 	}
 
-	*lv = *precalc_ptrs;
-
+	*lv = *precalced_lv;
+	LEV_LOG(LL_INFO, "HERE");
 	return lv;
 }
 
-int FileLineProcesser::LinesView::write(const string& path, char sep='\n'){
+int FileLineProcesser::LinesView::write(const std::string& path, char sep){
 	LEV_LOG(LL_INFO, "Writitng lines to file : " << path);
 
 	SmartDescriptor temp_fd;	
-	int status = temp_fd.open(path);
+	int status = temp_fd.open_write(path);
 	if(status != 0){
 		return status;
 	}
@@ -39,35 +39,40 @@ int FileLineProcesser::LinesView::write(const string& path, char sep='\n'){
 	temp_fd.close();
 
 	LEV_LOG(LL_INFO, "Done");
-	return ret;
+	return 0;
 }
 
-int FileLineProcesser::open(const char* path){
-
-	return sfd.open(path);
+int FileLineProcesser::open(const std::string& path){
+	return sfd.open_read(path);
 }
 
-int FileLineProcesser::read(){
-	if(data.buff != NULL)
-		delete data.buff;
-	return sfd.read_all(filename, &data.buff, &data.size);
+int FileLineProcesser::read_lines(){
+	if(buff != NULL){
+		delete buff;
+	}
+	int status = sfd.read_all(&buff, &size);
+	if(status != 0 ){
+		return status;
+	}
+	LEV_LOG(LL_INFO, "All lines were read" );
+	return status;
 }
 
 
 void FileLineProcesser::LinesView::print_top_non_empty(size_t size){
-	auto min_l = std::min((size_t)size, (size_t)ptrs.size());
+	auto min_l = std::min((size_t)size, (size_t)lines.size());
 
 	LEV_LOG(LL_INFO, "Top " << min_l << " non-empty lines\n");
 
 	for (size_t i = 1, j = 0; i <= min_l; ++j) {
-		if(strlen(ptrs[j]) >= 10) {
-			std::cout << ptrs[j] << "\n";
+		if(lines[j].size() >= 10) {
+			std::cout << lines[j] << "\n";
 			//if(i % 4 == 0) std::cout << "\n";
 			++i;
 		}
 	}
-
-	LEV_LOG(LL_INFO, "End\n");
+	std::cout << '\n';
+	LEV_LOG(LL_INFO, "End");
 }
 
 bool FileLineProcesser::LinesView::_is_prep(char c){
@@ -86,13 +91,11 @@ bool FileLineProcesser::LinesView::_is_prep(char c){
 }
 
 FileLineProcesser::FileLineProcesser() :
- buffer(NULL),
- total_size(0),
- precalc_ptrs(NULL) {
+ buff(NULL),
+ size(0),
+ precalced_lv(NULL) {
 
  }
 
 FileLineProcesser::~FileLineProcesser(){
-	if(buffer != NULL)
-		delete buffer;
 }

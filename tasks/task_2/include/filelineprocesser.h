@@ -1,12 +1,13 @@
 #include <vector>
-#include <string<
+#include <string>
 #include <algorithm>
+#include <string_view>
 
 #include "file_tools.h"
 #include "my_string_view.h"
 #include "smart_descriptor.h"
 
-using string_view = my_string_view;
+//using string_view = my_string_view;
 
 /**
  * @brief      FileLineProcesser
@@ -14,9 +15,8 @@ using string_view = my_string_view;
 class FileLineProcesser {
 
 	SmartDescriptor sfd; //!< fd for io ops
-	string_view data; //!< whole file in memory
-	LinesView* precalc_ptrs; //!< lines ptrs
-
+	char* buff;
+	size_t size;
 public:
 	
 	/**
@@ -42,25 +42,13 @@ public:
 		 *
 		 * @return     status code, 0 if OK
 		 */
-		int write(const std::string& path, char sep = '\n');
+		int write(const std::string& path, char sep='\n');
 
 
 		LinesView() = default; //!< default constructor
-		
+		LinesView(const LinesView&) = default;
 		~LinesView() = default; //!< default destructor
 
-		/**
-		 * @brief      sort ptrs as strings
-		 */
-		void sort();
-
-		/**
-		 * @brief      Sort using reverse order
-		 */
-		void sort_backwise();
-		
-		LinesView* generate_bread(size_t p_count);
-	
 	private:
 		static bool _is_prep(char c);
 	};
@@ -79,7 +67,7 @@ public:
 	 *
 	 * @return     status code, 0 if OK
 	 */
-	int open(const char* filename);
+	int open(const std::string& filename);
 
 	/**
 	 * @brief      Read file
@@ -94,4 +82,7 @@ public:
 
 	FileLineProcesser();
 	~FileLineProcesser();
+private:
+
+	LinesView* precalced_lv; //!< lines ptrs
 };

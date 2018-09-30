@@ -1,6 +1,7 @@
+#pragma once
+
 class my_string_view {
-	size_t size;
-	char* buff;
 public:
-	
+	size_t size;
+	char* buff;	
 };

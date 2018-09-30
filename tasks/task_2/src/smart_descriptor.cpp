@@ -1,26 +1,32 @@
 #include "smart_descriptor.h"
+#include "logging.h"
 
-int SmartDescriptor::open(const std::string& path){
-	return fr_open(&file, path, "r+");
+int SmartDescriptor::open_read(const std::string& path){
+	return ft_open(&file, path.c_str(), "r+");
 }
 
-int SmartDescriptor::read(string_view* s_view, size_t len){
-	int r_size = fr_read(file, s_view.buff, len);
+int SmartDescriptor::open_write(const std::string& path){
+	return ft_open(&file, path.c_str(), "w+");
+}
+
+
+/*int SmartDescriptor::read(string_view* s_view, size_t len){
+	int r_size = ft_read(file, s_view->buff, len);
 	s_view.size = r_size;
 	return r_size;	
-}
+}*/
 
-int SmartDescriptor::read_full(string_view* s_view){
+int SmartDescriptor::read_all(char** buff, size_t* size){
 	int file_size = ft_size(file);
-	int r_size = fr_read(file, s_view.buff, file_size);
-	s_view.size = r_size;
+	int r_size = ft_read(file, buff, file_size);
+	*size = r_size;
 	return r_size;
 }
 
-int SmartDescriptor::write(string_view& s_view, char sep = '\n'){
-	return fr_write(file, s_view.buff, s_view.size, sep);
+int SmartDescriptor::write(string_view& s_view, char sep='\n'){
+	return ft_write(file, s_view.data(), s_view.size(), sep);
 }
 
 int SmartDescriptor::close(){
-	return fr_close(file);
+	return ft_close(file);
 }

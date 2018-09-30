@@ -3,8 +3,8 @@ cmake_minimum_required (VERSION 3.1)
 project (Akos)
 
 # default compile flags
-set(CMAKE_CXX_FLAGS "-std=c++11 -Wall")
-set (CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_FLAGS "-std=c++17 -Wall")
+set (CMAKE_CXX_STANDARD 17)
 #set(LOG 0)
 option(LOGMOD "help string describing LOG" OFF)
 
@@ -19,8 +19,8 @@ else()
 endif()
 
 # include libs
-include_directories(lib)
-include_directories(src)
+include_directories(utility/include)
+include_directories(utility/src)
 
 set(SOURCE_FILES src)
 set(TASKS_FILES tasks)
@@ -31,12 +31,16 @@ set(TASKS_FILES tasks)
  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Collect sources
-file(GLOB_RECURSE CPP_SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "${SOURCE_FILES}/*.cpp")
-file(GLOB_RECURSE C_SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "${SOURCE_FILES}/*.c")
+file(GLOB_RECURSE CPP_SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "${TASKS_FILES}/task_2/*.cpp")
+file(GLOB_RECURSE C_SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "${TASKS_FILES}/task_2/*.c")
 
 # Collect execs
-add_executable(task_1 ${CPP_SOURCES} ${C_SOURCES} "tasks/task_1.cpp")
-add_executable(task_2 ${CPP_SOURCES} ${C_SOURCES} "tasks/task_2.cpp")
+#add_executable(task_1 ${CPP_SOURCES} ${C_SOURCES} "tasks/task_1/task_1.cpp")
+add_executable(task_2 ${CPP_SOURCES} ${C_SOURCES} "tasks/task_2/task_2.cpp")
+
+include_directories(tasks/task_1/include)
+include_directories(tasks/task_2/include)
+
 
 # Download and unpack googletest at configure time
 configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
@@ -71,8 +75,8 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
 endif()
 
 # Now simply link against gtest or gtest_main as needed. Eg
-include_directories(src)
-add_executable(mt_test tests/mt_test.cpp src/mathtools.cpp)
+include_directories(${gtest_SOURCE_DIR}/include)
+#add_executable(mt_test tasks/task_1/tests/mt_test.cpp tasks/task_1/src/mathtools.cpp)
 
-target_link_libraries(mt_test gtest_main)
-add_test(NAME mt_test COMMAND mt_test)
+#target_link_libraries(mt_test gtest_main)
+#add_test(NAME mt_test COMMAND mt_test)

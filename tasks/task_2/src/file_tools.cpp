@@ -28,7 +28,7 @@
 
 
 void _mark_ptrs(char* buffer, char** string_arr);
-int _process_error(const char* filename, int code);
+int _process_error(const char* filename);
 
 int get_file_size(const char* filename){
     
@@ -41,7 +41,7 @@ int get_file_size(const char* filename){
         return file_info.st_size;
     }
     
-    return _process_error(filename, code);
+    return _process_error(filename);
 }
 
 
@@ -57,31 +57,31 @@ int get_file_size(const char* filename){
 */
 
 int ft_open(FILE** file, const char* path, const char* mode){
-    *file = fopen(path.c_str(), mode);
+    *file = fopen(path, mode);
     if(*file == NULL){
-        int err_code = errno;
         LEV_LOG(LL_ERR, "While opening " << path << " error occured");
         return _process_error(""); 
     }
-    LEV_LOG(LL_INFO, "File " << path.c_str() << " opened.");
+    LEV_LOG(LL_INFO, "File " << path << " opened.");
     return 0; 
 }
 
 int ft_read(FILE* file, char** buff, size_t len){
-    *buffer = new char[len];
-    int num_bytes = fread(buff, sizeof(char), len, file);
-    if(num_bytes != len){
+    *buff = new char[len + 1];
+    int num_bytes = fread(*buff, sizeof(char), len, file);
+    if(num_bytes != len && !feof(file)){
         return _process_error("While reading from file error occured"); 
     }
+    (*buff)[len] = '\0';
     return 0; 
 }
 
-int ft_write(FILE* file, const char* buff, size_t len, char sep = '\n'){
+int ft_write(FILE* file, const char* buff, size_t len, char sep='\n'){
     int num_bytes = fwrite(buff, sizeof(char), len, file);
     if(num_bytes != len){
         return _process_error("While writing to file error occured"); 
     }
-    if(sep != ''){
+    if(sep != '\0'){
         num_bytes = fwrite(&sep, sizeof(char), 1, file);
         if(num_bytes != 1){
             return _process_error("While writing to file error occured"); 
@@ -91,10 +91,9 @@ int ft_write(FILE* file, const char* buff, size_t len, char sep = '\n'){
 }
 
 size_t ft_size(FILE* file){
-    int orig = SEEK_CUR;
-    fseek(pFile , 0 , SEEK_END);
-    long int lSize = ftell (pFile);
-    fseek(pFile , 0 , orig);
+    fseek(file , 0 , SEEK_END);
+    long int lSize = ftell (file);
+    fseek(file , 0 , SEEK_SET);
     return (size_t)lSize;
 }
 
@@ -118,7 +117,7 @@ int ft_close(FILE* file){
  
 */
 
-{
+
     int read_file(const char* filename, char** buffer, size_t* total_size){
         int file_size = get_file_size(filename);
         
@@ -137,8 +136,7 @@ int ft_close(FILE* file){
         fd = fr_open(filename, FR_RDONLY);
         
         if( fd == -1 ){
-            int code = errno;
-            return _process_error(filename, code);
+            return _process_error(filename);
         }
         
         assert(buffer != NULL);
@@ -157,7 +155,7 @@ int ft_close(FILE* file){
         } else if(read_size == -1){
             int code = errno;
             delete buffer;
-            return _process_error(filename, code);
+            return _process_error(filename);
         }
         
         *(*buffer + (read_size)) = '\0';
@@ -172,7 +170,7 @@ int ft_close(FILE* file){
         
         if( fd == -1 ){
             int code = errno;
-            return _process_error(filename, code);
+            return _process_error(filename);
         }
         
         assert(buffer != NULL);    
@@ -191,7 +189,7 @@ int ft_close(FILE* file){
 
         if(write_size == -1){
             int code = errno;
-            ret_code = _process_error(filename, code);
+            ret_code = _process_error(filename);
         }
 
         for(char* cur = buffer; cur < buffer + size; ++cur){
@@ -211,7 +209,7 @@ int ft_close(FILE* file){
         fd = fr_open(filename, FR_WRTCREAT, FR_RULES);
         if( fd == -1 ){
             int code = errno;
-            return _process_error(filename, code);
+            return _process_error(filename);
         }
 
         for(size_t i = 0; i < size; ++i){
@@ -220,19 +218,19 @@ int ft_close(FILE* file){
             ptr_arr[i][len] = '\n';
             if((fr_write(fd, ptr_arr[i], len + 1)) == -1){
                 int code = errno;
-                return _process_error(filename, code);
+                return _process_error(filename);
             }
             ptr_arr[i][len] = '\0';
         }
 
         if(fr_close(fd) != 0){
             int code = errno;
-            return _process_error(filename, code);   
+            return _process_error(filename);   
         }
 
         return 0;
     }
-}
+
 
 /*
     _____ _______ _____    _______ ____   ____  _       _____

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdio.h>
 
 #include <sys/stat.h>
@@ -77,3 +79,16 @@ int multi_write(const char* filename, char** ptr_arr, size_t size);
  * @return     line count
  */
 size_t make_ptr_arr(char* buffer, char*** ptr_arr);
+
+
+//ft funcs
+
+int ft_open(FILE** file, const char* path, const char* mode);
+
+int ft_read(FILE* file, char** buff, size_t len);
+
+int ft_write(FILE* file, const char* buff, size_t len, char sep);
+
+size_t ft_size(FILE* file);
+
+int ft_close(FILE* file);

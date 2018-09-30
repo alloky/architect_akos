@@ -1,7 +1,11 @@
 #include "file_tools.h"
-#include "my_string_view.h"
+//#include "my_string_view.h"
 
-using string_view = my_string_view;
+#include <string>
+#include <string_view>
+
+//using string_view = my_string_view;
+using std::string_view;
 
 /**
  * @brief      Class for smart descriptor.
@@ -17,8 +21,19 @@ public:
 	 *
 	 * @return     status code, 0 if OK
 	 */
-	int open(const string& path);
+	int open_read(const std::string& path);
 	
+
+	/**
+	 * @brief      Opens file for WO ops
+	 *
+	 * @param[in]  path  path
+	 *
+	 * @return     status code, 0 if OK
+	 */
+	int open_write(const std::string& path);
+	
+
 	/**
 	 * @brief      Reads from opened file
 	 *
@@ -36,7 +51,7 @@ public:
 	 *
 	 * @return     status code, 0 if OK
 	 */
-	int read_all(string_view* s_view);
+	int read_all(char** buff, size_t* size);
 
 	/**
 	 * @brief      Writes sting to open file
@@ -45,7 +60,7 @@ public:
 	 *
 	 * @return     status code, 0 if OK
 	 */
-	int write(string_view& s_view, char sep='\n');
+	int write(string_view& s_view, char sep);
 	
 	/**
 	 * @brief      closes file
