@@ -13,10 +13,11 @@ bool __st_isOk(Stack* st);
 template <typename T>
 class Stack {
 	#ifdef STACK_DEBUG
-	void field_cnry_top[ST_DBG_CNRY_SIZE];
+	int __field_cnry_top[ST_DBG_CNRY_SIZE];
 	Stack<T>* fake_this;
-	void* buffer_cnry_top;
-	void* buffer_cnry_btm;
+	int* __buffer_cnry_top;
+	int* __buffer_cnry_btm;
+	std::hash<T> buf_hasher;
 	#endif
 	
 	size_t capacity;
@@ -24,7 +25,7 @@ class Stack {
 	T* buffer;
 		
 	#ifdef STAKC_DEBUG
-	void field_cnry_btm[ST_DBG_CNRY_SIZE];
+	int __field_cnry_btm[ST_DBG_CNRY_SIZE];
 	#endif
 public:
 	explicit Stack() :
@@ -33,8 +34,8 @@ public:
 		capacity(0) {
 		#ifdef STACK_DEBUG
 		fake_this = this; 
-		std::memset(field_cnry_top, 0xBEDABEDA, ST_DBG_CNRY_SIZE);		
-		std::memset(field_cnry_btm, 0xBEDABEDA, ST_DBG_CNRY_SIZE);
+		std::memset(__field_cnry_top, 0xBEDABEDA, ST_DBG_CNRY_SIZE);		
+		std::memset(__field_cnry_btm, 0xBEDABEDA, ST_DBG_CNRY_SIZE);
 		#endif
 	}
 	
@@ -109,15 +110,15 @@ private:
 			throw std::bad_alloc("Stack expand failde: new returned nullptr");
 		}
 
-		buffer_cnry_top = (int*) new_mem;
-		std::memset(buffer_cnry_top, 0xBEDABEDA, ST_DBG_CNRY_SIZE);
+		__buffer_cnry_top = (int*) new_mem;
+		std::memset(__buffer_cnry_top, 0xBEDABEDA, ST_DBG_CNRY_SIZE);
 		
 		T* new_buffer = (T*)((int*)new_mem + ST_DBG_CNRY_SIZE);
 		std::memcpy(new_buffer, buffer, sizeof(T)*(capacity/2));
 		std::fill(new_buffer + capacity, ST_POISON_VALUE, (capacity - size));		
 
-		buffer_cnry_btm = (int*)(new_buffer + capacity);
-		std::memset(buffer_cnry_btm, 0xBEDABEDA, ST_DBG_CNRY_SIZE);
+		__buffer_cnry_btm = (int*)(new_buffer + capacity);
+		std::memset(__buffer_cnry_btm, 0xBEDABEDA, ST_DBG_CNRY_SIZE);
 		
 
 		ST_ASSERT_OK();	
@@ -129,7 +130,7 @@ private:
 		LEV_LOG(LL_DEBUG, "message : " << msg);
 		
 		std::cout << "Stack [" << this << "]" << " (" << (__st_isOk() ? "Ok" : "Not ok") << ")  {\n";
-		std::cout << "    " << "field_cnry_top = " << field_cnry_top[0] << (__check_top_cnry()? "(ok)" : "(spoiled)") << "\n";
+		std::cout << "    " << "__field_cnry_top = " << __field_cnry_top[0] << (__check_top_cnry()? "(ok)" : "(spoiled)") << "\n";
 		std::cout << "    " << "fake_this = " << fake_this << "\n"; 			
 		std::cout << '\n';
 
@@ -148,13 +149,60 @@ private:
 		}
 		std::cout << "    " << "}"; 
 		std::cout << std::endl;
-		std::cout << "    " << "field_cnry_btm = " << field_cnry_btmp[0] << (__check_btm_cnry()? "(ok)" : "(spoiled)") << "\n";
+		std::cout << "    " << "__field_cnry_btm = " << __field_cnry_btmp[0] << (__check_btm_cnry()? "(ok)" : "(spoiled)") << "\n";
 		std::cout << "}";
 
 		std::cout << std::endl;
 
 		LEVL_LOG(LL_DEBUG, "End of Stack strace");
 	}
+
+	bool __check_btm_cnry(){
+		for (size_t i = 0; i < ST_DBG_CNRY_SIZE; ++i){
+			if(__field_cnry_btm[i] != 0xBEDABEDA){
+				LEV_LOG(LL_ERROR, "STACK CANARY CHECK FAILED!"
+								  "INVALID WRITE TO BOTTOM CANARY"
+								  "IN POS : " << i);
+			}
+		}
+	}
+
+	bool __check_top_cnry(){
+		for (size_t i = 0; i < ST_DBG_CNRY_SIZE; ++i){
+			if(__field_cnry_top[i] != 0xBEDABEDA){
+				LEV_LOG(LL_ERROR, "STACK CANARY CHECK FAILED!"
+								  "INVALID WRITE TO TOP CANARY"
+								  "IN POS : " << i);
+			}
+		}
+	} 
+
+	bool __check_buffer_top_cnry(){
+		for (size_t i = 0; i < ST_DBG_CNRY_SIZE; ++i){
+			if(__buffer_cnry_top[i] != 0xBEDABEDA){
+				LEV_LOG(LL_ERROR, "STACK BUFFER CANARY CHECK FAILED!"
+					              "INVALID WRITE TO BUFFER TOP CANARY"
+					              "IN POS : " << i);
+			}
+		}
+	}
+
+	bool __check_buffer_btm_cnry(){
+		for (size_t i = 0; i < ST_DBG_CNRY_SIZE; ++i){
+			if(__buffer_cnry_btm[i] != 0xBEDABEDA){
+				LEV_LOG(LL_ERROR, "STACK BUFFER CANARY CHECK FAILED!"
+					              "INVALID WRITE TO BUFFER BTM CANARY"
+					              "IN POS : " << i);
+				return false;
+			}
+		}
+		return true;
+	} 
+
+	bool __check_buffer_hash(){
+
+	}
+
 	#endif
 };
 
