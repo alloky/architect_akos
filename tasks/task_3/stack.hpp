@@ -1,23 +1,29 @@
 #include <assert.h>
 
+#define STACK_DEBUG 1
 #ifdef STACK_DEBUG
 
 #include "logging.h"
 #define ST_DBG_CNRY_SIZE 20
 #define ST_ASSERT_OK if(!__st_isOk(this)) { LEV_LOG(LL_ERROR, "STACK IS NOT OK!"); __strace(); }
 #define ST_POISON_VALUE 255
-bool __st_isOk(Stack* st);
+
+template <typename T>
+bool __st_isOk(Stack<T>* st);
 
 #endif
+
+
 
 template <typename T>
 class Stack {
 	#ifdef STACK_DEBUG
 	int __field_cnry_top[ST_DBG_CNRY_SIZE];
-	Stack<T>* fake_this;
 	int* __buffer_cnry_top;
 	int* __buffer_cnry_btm;
-	std::hash<T> buf_hasher;
+	Stack<T>* __fake_this;
+	size_t __hash_sum;
+	std::hash<T> __buf_hasher;
 	#endif
 	
 	size_t capacity;
@@ -33,7 +39,7 @@ public:
 		buffer(nullptr),
 		capacity(0) {
 		#ifdef STACK_DEBUG
-		fake_this = this; 
+		__fake_this = this; 
 		std::memset(__field_cnry_top, 0xBEDABEDA, ST_DBG_CNRY_SIZE);		
 		std::memset(__field_cnry_btm, 0xBEDABEDA, ST_DBG_CNRY_SIZE);
 		#endif
@@ -52,6 +58,7 @@ public:
 
 		#ifdef STACK_DEBUG
 		__make_poison(size);
+		__hash_sum = __calc_hash();
 		ST_ASSERT_OK();
 		#endif	
 
@@ -71,6 +78,7 @@ public:
 		++size;		
 
 		#ifdef STACK_DEBUG
+		__hash_sum = __calc_hash();
 		ST_ASSERT_OK();
 		#endif
 	}
@@ -120,6 +128,7 @@ private:
 		__buffer_cnry_btm = (int*)(new_buffer + capacity);
 		std::memset(__buffer_cnry_btm, 0xBEDABEDA, ST_DBG_CNRY_SIZE);
 		
+		__hash_sum = __calc_hash();
 
 		ST_ASSERT_OK();	
 	}
@@ -131,12 +140,12 @@ private:
 		
 		std::cout << "Stack [" << this << "]" << " (" << (__st_isOk() ? "Ok" : "Not ok") << ")  {\n";
 		std::cout << "    " << "__field_cnry_top = " << __field_cnry_top[0] << (__check_top_cnry()? "(ok)" : "(spoiled)") << "\n";
-		std::cout << "    " << "fake_this = " << fake_this << "\n"; 			
+		std::cout << "    " << "fake_this = " << __fake_this << "\n"; 			
 		std::cout << '\n';
 
 		std::cout << "    " << "capacity  = " << capacity << "\n";
 		std::cout << "    " << "size = " << size << "\n";
-		std::cout << "    " << "fake_this = " << fake_this << "\n";
+		std::cout << "    " << "fake_this = " << __fake_this << "\n";
 
 		std::cout << std::endl;
 
@@ -199,23 +208,52 @@ private:
 		return true;
 	} 
 
-	bool __check_buffer_hash(){
+	size_t __calc_hash(){
+		size_t hash_sum = 0;
+		
+		hash_sum += 3 * hash_sum + buffer;
+		hash_sum += 3 * hash_sum + capacity;
+		hash_sum += 3 * hash_sum + size;
+		hash_sum += 3 * hash_sum + __fake_this;
 
+		if (capacity < 0) {
+			return hash_sum;
+		}
+
+		assert(buffer != nullptr);
+
+		for (size_t i = 0; i < capacity; ++i) {
+			hash_sum += 3 * hash_sum + __buff_hasher(buffer[i]);
+		}
+
+		return hash_sum;
+	}
+
+	bool __check_hash() {
+		return __hash_sum == __calc_hash();
 	}
 
 	#endif
 };
 
-bool __st_isOk(Stack* st){
+
+#ifdef STACK_DEBUG
+
+template <class T>
+bool __st_isOk(Stack<T>* st) {
 	return st != nullptr &&
-	st->fake_this == st &&
-	st->size >= 0 &&
-	st->capacity >= 0 &&
-	st->capacity >= size &&
-	st->buffer != nullptr && 
-	st->__check_btm_cnry() &&
-	st->__check_top_cnry() &&
-	st->__check_buffer_top_cnry() &&
-	st->__check_buffer_btm_cnry() &&
-	st->__check_buffer_hash();
-}
+		st->__fake_this == st &&
+		st->size >= 0 &&
+		st->capacity >= 0 &&
+		st->capacity >= st->size &&
+		st->buffer != nullptr &&
+		st->__check_btm_cnry() &&
+		st->__check_top_cnry() &&
+		st->__check_buffer_top_cnry() &&
+		st->__check_buffer_btm_cnry() &&
+		st->__check_hash();
+};
+
+
+#endif // STACK_DEBUG
+
