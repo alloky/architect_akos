@@ -2,7 +2,7 @@
 
 #include "logging.h"
 #define MEMPT_CNRY_SIZE 20
-#define MEMPRT_ASSERT_OK if(!isOk()) { LEV_LOG(LL_ERROR, "MEMEPROTECTION BROKEN!"); body.__strace(); }
+#define MEMPRT_ASSERT_OK if(!isOk()) { LEV_LOG(LL_ERR, "MEMEPROTECTION BROKEN!"); body.__strace("bad news everyone!"); }
 #define MEMPRT_POISON_VALUE 255
 
 #endif
@@ -12,8 +12,6 @@ class MemProtector {
 #ifdef MEM_PROTECTION
 private:
 	int __field_cnry_top[MEMPT_CNRY_SIZE];
-	std::hash<T> __class_hasher;
-	size_t __current_hash;
 #endif
 public:
 	T body;
@@ -23,22 +21,24 @@ private:
 #endif
 
 public:
-	MemProtector() :
-		body() {
+	MemProtector() {
+#ifdef MEM_PROTECTION
 		__init_canaries();
-		__current_hash = __class_hasher(body);
+#endif
 	}
 
-	T& operator() {
-		MEMPRT_ASSERT_OK();
+	~MemProtector() {
+	}
+
+	T& operator()() {
+		MEMPRT_ASSERT_OK;
 		return body;
 	}
 
 #ifdef MEM_PROTECTION
-
-
+public:
 	bool isOk() {
-		return __checkCanaries() && body.isOk();
+		return __check_canaries() && body.isOk();
 	}
 
 private:
@@ -46,20 +46,39 @@ private:
 		int* __field_cnry = top ? __field_cnry_top : __field_cnry_btm;
 		for (size_t i = 0; i < MEMPT_CNRY_SIZE; ++i) {
 			if (__field_cnry[i] != 0xBEDABEDA) {
-				LEV_LOG(LL_ERROR, "STACK CANARY CHECK FAILED! "
+				LEV_LOG(LL_ERR, "STACK CANARY CHECK FAILED! "
 					"INVALID WRITE TO " << (top? "TOP" : "BTM") << " CANARY "
 					"IN POS : " << i);
+				return false;
 			}
 		}
+		return true;
 	}
 
-	bool __checkCanaries() {
+	bool __check_canaries() {
 		return __check_cnry() && __check_cnry(false);
 	}
 
 	void __init_canaries() {
-		std::memset(__field_cnry_top, 0xBEDABEDA, ST_DBG_CNRY_SIZE);
-		std::memset(__field_cnry_btm, 0xBEDABEDA, ST_DBG_CNRY_SIZE);
+		std::memset(__field_cnry_top, 0xBEDABEDA, MEMPT_CNRY_SIZE);
+		std::memset(__field_cnry_btm, 0xBEDABEDA, MEMPT_CNRY_SIZE);
+	}
+
+	void __strace(const char* msg) {
+		LEV_LOG(LL_DEBUG, "MemProtector class strace triggered");
+		LEV_LOG(LL_DEBUG, "message : " << msg);
+		
+		std::cout << "    " << "__field__cnry_top = " << __cnry_top[0] << (__check_cnry(true) ? "(ok)" : "(spoiled)") << "\n";
+
+		std::cout << "Body (" << (__st_isOk() ? "OK" : "NOT OK") << ") {" << "\n";
+		body.__strace(msg);
+		
+		std::cout << "    " << "__field__cnry_btm = " << __cnry_btmp[0] << (__check_cnry() ? "(ok)" : "(spoiled)") << "\n";
+		std::cout << "}";
+
+		std::cout << std::endl;
+
+		LEVL_LOG(LL_DEBUG, "End of MemProtector strace");
 	}
 
 #endif

@@ -75,7 +75,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>C:\Users\alloky\Documents\architect_akos\tasks\task_3;C:\Users\alloky\Documents\architect_akos\utility\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\alloky\Documents\architect_akos\tasks\task_3\include;C:\Users\alloky\Documents\architect_akos\utility\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
@@ -99,17 +99,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="tasks\task_3\main (14).cpp" />
-    <ClCompile Include="tasks\task_3\ProtectedCArray.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="lib\logging.h" />
     <ClInclude Include="lib\mathtools.h" />
     <ClInclude Include="lib\polynom.h" />
-    <ClInclude Include="MemProtector.hpp" />
     <ClInclude Include="src\utility.hpp" />
-    <ClInclude Include="tasks\task_3\stack.hpp" />
+    <ClInclude Include="tasks\task_3\include\MemProtector.hpp" />
+    <ClInclude Include="tasks\task_3\include\ProtectedCArray.hpp" />
+    <ClInclude Include="tasks\task_3\include\stack.hpp" />
     <ClInclude Include="utility\include\logging.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="tasks\task_3\task3.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
