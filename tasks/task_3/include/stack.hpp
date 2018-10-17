@@ -8,9 +8,6 @@
 #define ST_ASSERT_OK if(!__st_isOk(this)) { LEV_LOG(LL_ERROR, "STACK IS NOT OK!"); __strace(); }
 #define ST_POISON_VALUE 255
 
-template <typename T>
-bool __st_isOk(Stack<T>* st);
-
 #endif
 
 
@@ -30,7 +27,7 @@ class Stack {
 	size_t size;
 	T* buffer;
 		
-	#ifdef STAKC_DEBUG
+	#ifdef STACK_DEBUG
 	int __field_cnry_btm[ST_DBG_CNRY_SIZE];
 	#endif
 public:
@@ -166,25 +163,25 @@ private:
 		LEVL_LOG(LL_DEBUG, "End of Stack strace");
 	}
 
-	bool __check_btm_cnry(){
-		for (size_t i = 0; i < ST_DBG_CNRY_SIZE; ++i){
-			if(__field_cnry_btm[i] != 0xBEDABEDA){
+	bool __check_btm_cnry() {
+		for (size_t i = 0; i < ST_DBG_CNRY_SIZE; ++i) {
+			if (__field_cnry_btm[i] != 0xBEDABEDA) {
 				LEV_LOG(LL_ERROR, "STACK CANARY CHECK FAILED!"
-								  "INVALID WRITE TO BOTTOM CANARY"
-								  "IN POS : " << i);
+					"INVALID WRITE TO BOTTOM CANARY"
+					"IN POS : " << i);
 			}
 		}
 	}
 
-	bool __check_top_cnry(){
-		for (size_t i = 0; i < ST_DBG_CNRY_SIZE; ++i){
-			if(__field_cnry_top[i] != 0xBEDABEDA){
+	bool __check_top_cnry() {
+		for (size_t i = 0; i < ST_DBG_CNRY_SIZE; ++i) {
+			if (__field_cnry_top[i] != 0xBEDABEDA) {
 				LEV_LOG(LL_ERROR, "STACK CANARY CHECK FAILED!"
-								  "INVALID WRITE TO TOP CANARY"
-								  "IN POS : " << i);
+					"INVALID WRITE TO TOP CANARY"
+					"IN POS : " << i);
 			}
 		}
-	} 
+	}
 
 	bool __check_buffer_top_cnry(){
 		for (size_t i = 0; i < ST_DBG_CNRY_SIZE; ++i){
@@ -233,6 +230,20 @@ private:
 		return __hash_sum == __calc_hash();
 	}
 
+	bool __isOk() {
+		return this &&
+			__fake_this == st &&
+			size >= 0 &&
+			capacity >= 0 &&
+			capacity >= st->size &&
+			buffer != nullptr &&
+			__check_btm_cnry() &&
+			__check_top_cnry() &&
+			__check_buffer_top_cnry() &&
+			__check_buffer_btm_cnry() &&
+			__check_hash();
+	};
+
 	#endif
 };
 
@@ -240,19 +251,6 @@ private:
 #ifdef STACK_DEBUG
 
 template <class T>
-bool __st_isOk(Stack<T>* st) {
-	return st != nullptr &&
-		st->__fake_this == st &&
-		st->size >= 0 &&
-		st->capacity >= 0 &&
-		st->capacity >= st->size &&
-		st->buffer != nullptr &&
-		st->__check_btm_cnry() &&
-		st->__check_top_cnry() &&
-		st->__check_buffer_top_cnry() &&
-		st->__check_buffer_btm_cnry() &&
-		st->__check_hash();
-};
 
 
 #endif // STACK_DEBUG

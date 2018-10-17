@@ -13,6 +13,8 @@ MakeFile
 !*.hpp
 !*.md
 !*.pdf
+!*.sln
+!*.vcxproj
 !CMakeLists.txt
 !CMakeLists.txt.in
 !Doxyfile
