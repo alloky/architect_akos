@@ -78,7 +78,7 @@ private:
 
 		std::cout << std::endl;
 
-		LEVL_LOG(LL_DEBUG, "End of MemProtector strace");
+		LEV_LOG(LL_DEBUG, "End of MemProtector strace");
 	}
 
 #endif
