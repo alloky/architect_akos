@@ -3,7 +3,7 @@
 #include "logging.h"
 #define MEMPT_CNRY_SIZE 20
 #define MEMPRT_ASSERT_OK if(!isOk()) { LEV_LOG(LL_ERR, "MEMEPROTECTION BROKEN!"); body.__strace("bad news everyone!"); }
-#define MEMPRT_POISON_VALUE 255
+#define MEMPRT_POISON 0xBEDABEDA
 
 #endif
 
@@ -11,13 +11,13 @@ template <class T>
 class MemProtector {
 #ifdef MEM_PROTECTION
 private:
-	int __field_cnry_top[MEMPT_CNRY_SIZE];
+	int* __field_cnry_top[MEMPT_CNRY_SIZE];
 #endif
 public:
 	T body;
 #ifdef MEM_PROTECTION
 private:
-	int __field_cnry_btm[MEMPT_CNRY_SIZE];
+	int* __field_cnry_btm[MEMPT_CNRY_SIZE];
 #endif
 
 public:
@@ -43,9 +43,9 @@ public:
 
 private:
 	bool __check_cnry(bool top = true) {
-		int* __field_cnry = top ? __field_cnry_top : __field_cnry_btm;
+		int** __field_cnry = top ? __field_cnry_top : __field_cnry_btm;
 		for (size_t i = 0; i < MEMPT_CNRY_SIZE; ++i) {
-			if (__field_cnry[i] != 0xBEDABEDA) {
+			if (__field_cnry[i] != (int*)MEMPRT_POISON) {
 				LEV_LOG(LL_ERR, "STACK CANARY CHECK FAILED! "
 					"INVALID WRITE TO " << (top? "TOP" : "BTM") << " CANARY "
 					"IN POS : " << i);
@@ -60,8 +60,8 @@ private:
 	}
 
 	void __init_canaries() {
-		std::memset(__field_cnry_top, 0xBEDABEDA, MEMPT_CNRY_SIZE);
-		std::memset(__field_cnry_btm, 0xBEDABEDA, MEMPT_CNRY_SIZE);
+		std::fill(__field_cnry_top, __field_cnry_top + MEMPT_CNRY_SIZE, (int*)MEMPRT_POISON);
+		std::fill(__field_cnry_btm, __field_cnry_btm + MEMPT_CNRY_SIZE, (int*)MEMPRT_POISON);
 	}
 
 	void __strace(const char* msg) {

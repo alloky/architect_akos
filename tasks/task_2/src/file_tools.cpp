@@ -1,3 +1,4 @@
+#pragma once
 #include <assert.h>
 
 #include "file_tools.h"
@@ -12,7 +13,7 @@
     #define fr_close _close
     #define FR_RDONLY _O_RDONLY 
     #define FR_RULES 0777
-    #define FR_WRTCREAT (_O_WRONLY | O_CREAT)
+    #define FR_WRTCREAT (_O_WRONLY | _O_CREAT)
 #else
     #include <unistd.h>
     #define fr_stat stat

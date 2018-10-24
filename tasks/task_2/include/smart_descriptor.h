@@ -1,10 +1,11 @@
+#pragma once
 #include "file_tools.h"
 //#include "my_string_view.h"
 
 #include <string>
 #include <string_view>
 
-//using string_view = my_string_view;
+//using string_view = std::string_view;
 using std::string_view;
 
 /**
@@ -56,6 +57,15 @@ public:
 	 * @return     status code, 0 if OK
 	 */
 	int write(string_view& s_view, char sep);
+
+	/**
+	 * @brief      Writes sting to open file
+	 *
+	 * @param      s_view  The s_viewer
+	 *
+	 * @return     status code, 0 if OK
+	 */
+	int write(const std::string & s_view, char sep);
 	
 	/**
 	 * @brief      closes file

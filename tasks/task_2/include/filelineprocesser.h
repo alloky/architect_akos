@@ -1,10 +1,12 @@
+#pragma once
+
 #include <vector>
 #include <string>
 #include <algorithm>
 #include <string_view>
 
 #include "file_tools.h"
-#include "my_string_view.h"
+//#include "my_string_view.h"
 #include "smart_descriptor.h"
 
 //using string_view = my_string_view;

@@ -1,7 +1,6 @@
 #include <assert.h>
 #include "ProtectedCArray.hpp"
 
-#define MEM_PROTECTION 1
 #ifdef MEM_PROTECTION
 
 #include "logging.h"
@@ -15,7 +14,7 @@
 template <typename T>
 class Stack {
 #ifdef MEM_PROTECTION
-	Stack<T>* __fake_this{ nullptr };
+	Stack<T>* __fake_this{ this };
 	size_t __hash_sum{ 0 };
 	std::hash<T> __buff_hasher{};
 #endif
@@ -24,8 +23,7 @@ class Stack {
 
 
 public:
-	Stack() :
-		__fake_this(this)
+	Stack()
 	{
 	}
 
@@ -33,7 +31,7 @@ public:
 	{
 	}
 	
-	bool pop() {
+	T pop() {
 		#ifdef MEM_PROTECTION
 		ST_ASSERT_OK;
 		#endif
@@ -49,7 +47,7 @@ public:
 		ST_ASSERT_OK;
 		#endif	
 
-		return true;
+		return buffer[buffer.size];
 	}	
 
 	bool push(const T& element){
@@ -105,7 +103,7 @@ public:
 		for (size_t i = 0; i < buffer.capacity; ++i) {
 			std::cout << "    " << (i < buffer.size ? "*" : " ");
 			std::cout << "[" << i << "] : " << buffer[i];
-			std::cout << (std::memcmp(&buffer[i], &PRTARRAY_POISON_VALUE, sizeof(T)) ? " " : "(POISON)");
+			std::cout << (std::memcmp(&buffer[i], &PRTARRAY_POISON, sizeof(T)) ? " " : "(POISON)");
 			std::cout << '\n';
 		}
 		std::cout << "    " << "}";

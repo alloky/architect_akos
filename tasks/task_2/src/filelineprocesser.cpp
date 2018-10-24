@@ -75,6 +75,7 @@ void FileLineProcesser::LinesView::print_top_non_empty(size_t size){
 	LEV_LOG(LL_INFO, "End");
 }
 
+/*
 bool FileLineProcesser::LinesView::_is_prep(char c){
 	switch(c){
 		case '.': case ';': case ',': case '!': case '?':
@@ -89,6 +90,7 @@ bool FileLineProcesser::LinesView::_is_prep(char c){
 			return false;
 	}
 }
+*/
 
 FileLineProcesser::FileLineProcesser() :
  buff(NULL),

@@ -1,11 +1,11 @@
 #include <algorithm>
+#include <utility>
 
 #ifdef MEM_PROTECTION
 
 #include "logging.h"
 #define PRTARRAY_CNRY_SIZE 20
-//const int PRTARRAY_POISON_VALUE = 70707;
-const std::string PRTARRAY_POISON_VALUE = "beda";
+std::string PRTARRAY_POISON = std::string("pzdc");
 #endif
 
 
@@ -31,19 +31,23 @@ public:
 		}
 
 		T* new_buffer = (T*)((int**)new_mem + PRTARRAY_CNRY_SIZE);
-		std::move(new_buffer, new_buffer + size, buffer);
-		std::fill(new_buffer + size, new_buffer + capacity, PRTARRAY_POISON_VALUE);
+		std::move(buffer, buffer + size, new_buffer);
+
+		for (size_t i = size; i < capacity; ++i) {
+			std::memcpy(new_buffer + i, &PRTARRAY_POISON, sizeof(T));
+		}
+
 		delete[] __cnry_top;
 		buffer = new_buffer;
 
 		__cnry_top = (int**)new_mem;
 		for (size_t i = 0; i < PRTARRAY_CNRY_SIZE; ++i) {
-			__cnry_top[i] = (int*)0xBEDABEDA;
+			__cnry_top[i] = (int*)MEMPRT_POISON;
 		}
 		
 		__cnry_btm = (int**)(new_buffer + capacity);
 		for (size_t i = 0; i < PRTARRAY_CNRY_SIZE; ++i) {
-			__cnry_btm[i] = (int*)0xBEDABEDA;
+			__cnry_btm[i] = (int*)MEMPRT_POISON;
 		}
 	}
 
@@ -51,7 +55,7 @@ public:
 		if (capacity == 0) return true;
 		int** __cnry = top ? __cnry_top : __cnry_btm;
 		for (size_t i = 0; i < MEMPT_CNRY_SIZE; ++i) {
-			if (__cnry[i] != (int*)0xBEDABEDA) {
+			if (__cnry[i] != (int*)MEMPRT_POISON) {
 				LEV_LOG(LL_ERR, "ProtectedCArray CANARY CHECK FAILED! "
 					"INVALID WRITE TO " << (top ? "TOP" : "BTM") << " CANARY "
 					"IN POS : " << i);
@@ -62,7 +66,7 @@ public:
 	}
 
 	void __make_poison(size_t i) {
-		buffer[i] = PRTARRAY_POISON_VALUE;
+		buffer[i] = PRTARRAY_POISON;
 	}
 
 	bool __check_canaries() {
@@ -75,15 +79,15 @@ public:
 
 #else
 public:
-	size_t capacity;
-	size_t size;
+	size_t capacity{ 0 };
+	size_t size{ 0 };
 	T* buffer{nullptr};
 
 	void expand() {
+		if (capacity == 0) capacity = 1;
 		capacity *= 2;
-		T* new_buffer = new T[capacity];
-		std::move(new_buffer, new_buffer + size, buffer);
-		std::fill(new_buffer + size, new_buffer + capacity, PRTARRAY_POISON_VALUE);
+		T* new_buffer = new T[capacity]();
+		std::move(buffer, buffer + size, new_buffer);
 		delete[] buffer;
 		buffer = new_buffer;
 	}

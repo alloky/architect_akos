@@ -20,6 +20,8 @@ bool test_stack() {
 		}
 	}
 
+	st().__strace("check");
+
 	for (size_t i = 0; i < 100; ++i) {
 		std::string el;
 		flag &= st().top(el);
