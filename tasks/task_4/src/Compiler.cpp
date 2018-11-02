@@ -1,4 +1,4 @@
-
+#pragma once
 
 #include "compiler.h"
 #include "cpuemu-cmds.h"
@@ -54,90 +54,28 @@ void Compiler::__process_line(std::string_view& line, std::string& result, size_
 	if (line[0] == '#') return;
 	if (line[0] == ':') return;
 	size_t first_word_end = line.find(" ");
-	if (strncmp(line.data(), CPUE_ADD_WORD, first_word_end) == 0) {
-		result.push_back(CPUE_ADD_NUM);
+	
+	// Codegeneration for cmd parsing
+	if (0) {}
+#define DEF_CMD(CMD, WORD, PARSE_CODE, PROC_CODE) else if(strncmp(line.data(), WORD , first_word_end) == 0){\
+		result.push_back(CPUE_CMD_NUM:: ## CMD);\
+		addr++;\
+		if(true) PARSE_CODE \
 	}
-	else if (strncmp(line.data(), CPUE_SUB_WORD, first_word_end) == 0) {
-		result.push_back(CPUE_SUB_NUM);
-	}
-	else if (strncmp(line.data(), CPUE_MUL_WORD, first_word_end) == 0) {
-		result.push_back(CPUE_MUL_NUM);
-	}
-	else if (strncmp(line.data(), CPUE_DIV_WORD, first_word_end) == 0) {
-		result.push_back(CPUE_DIV_NUM);
-	}
-	else if (strncmp(line.data(), CPUE_MOD_WORD, first_word_end) == 0) {
-		result.push_back(CPUE_MOD_NUM);
-	}
-	else if (strncmp(line.data(), CPUE_MOV_WORD, first_word_end) == 0) {
-		result.push_back(CPUE_MOV_NUM);
-		addr++;
-		result.append(std::string(reinterpret_cast<char*>((size_t)atoll(line.data() + first_word_end)), sizeof(size_t)));
-	}
-	else if (strncmp(line.data(), CPUE_JMP_WORD, first_word_end) == 0) {
-		result.push_back(CPUE_JMP_NUM);
-		addr++;
-		string_view label_name = __parse_label_name(line);
-		if (labels_addrs.find(label_name) == labels_addrs.end()) {
-			throw std::exception("Invalid label name on line : " + line_num);
-		}
-		result.append(std::string(reinterpret_cast<char*>((size_t)labels_addrs[label_name]), sizeof(size_t)));
-	}
-	else if (strncmp(line.data(), CPUE_JL_WORD, first_word_end) == 0) {
-		result.push_back(CPUE_JL_NUM);
-		addr++;
-		string_view label_name = __parse_label_name(line);
-		if (labels_addrs.find(label_name) == labels_addrs.end()) {
-			throw std::exception("Invalid label name on line : " + line_num);
-		}
-		result.append(std::string(reinterpret_cast<char*>((size_t)labels_addrs[label_name]), sizeof(size_t)));
-	}
-	else if (strncmp(line.data(), CPUE_JLE_WORD, first_word_end) == 0) {
-		result.push_back(CPUE_JLE_NUM);
-		addr++;
-		string_view label_name = __parse_label_name(line);
-		if (labels_addrs.find(label_name) == labels_addrs.end()) {
-			throw std::exception("Invalid label name on line : " + line_num);
-		}
-		result.append(std::string(reinterpret_cast<char*>((size_t)labels_addrs[label_name]), sizeof(size_t)));
-	}
-	else if (strncmp(line.data(), CPUE_JEQ_WORD, first_word_end) == 0) {
-		result.push_back(CPUE_JEQ_NUM);
-		addr++;
-		string_view label_name = __parse_label_name(line);
-		if (labels_addrs.find(label_name) == labels_addrs.end()) {
-			throw std::exception("Invalid label name on line : " + line_num);
-		}
-		result.append(std::string(reinterpret_cast<char*>((size_t)labels_addrs[label_name]), sizeof(size_t)));
-	}
-	else if (strncmp(line.data(), CPUE_JGE_WORD, first_word_end) == 0) {
-		result.push_back(CPUE_JGE_NUM);
-		addr++;
-		string_view label_name = __parse_label_name(line);
-		if (labels_addrs.find(label_name) == labels_addrs.end()) {
-			throw std::exception("Invalid label name on line : " + line_num);
-		}
-		result.append(std::string(reinterpret_cast<char*>((size_t)labels_addrs[label_name]), sizeof(size_t)));
-	}
-	else if (strncmp(line.data(), CPUE_JG_WORD, first_word_end) == 0) {
-		result.push_back(CPUE_JG_NUM);
-		addr++;
-		string_view label_name = __parse_label_name(line);
-		if (labels_addrs.find(label_name) == labels_addrs.end()) {
-			throw std::exception("Invalid label name on line : " + line_num);
-		}
-		result.append(std::string(reinterpret_cast<char*>((size_t)labels_addrs[label_name]), sizeof(long long)));
-	}
-	else if (strncmp(line.data(), CPUE_PUSH_WORD, first_word_end) == 0) {
-		result.push_back(CPUE_PUSH_NUM);
-		addr++;
-		long long val = atoll(line.data() + first_word_end);
-		result.append(std::string(reinterpret_cast<char*>(&val), sizeof(long long)));
-	}
-	else if (strncmp(line.data(), CPUE_POP_WORD, first_word_end) == 0) {
-		result.push_back(CPUE_POP_NUM);
-	}
-	addr++;
+#define PARSE_LONG \
+	long long _tmp_long_val = atoll(line.data() + first_word_end); \
+	result.append(std::string(reinterpret_cast<char*>(&_tmp_long_val), sizeof(long long))); \
+	addr += sizeof(long long);
+#define PARSE_LABEL string_view label_name = __parse_label_name(line);\
+		if (labels_addrs.find(label_name) == labels_addrs.end()) {\
+			throw std::exception("Invalid label name on line : " + line_num);\
+		}\
+	size_t lbl_addr = labels_addrs[label_name];\
+	result.append(std::string(reinterpret_cast<char*>(&lbl_addr), sizeof(size_t)));\
+	addr += sizeof(size_t);
+#include "cpuemu-cmd-defs.h"
+#undef DEF_CMD
+	
 }
 
 string_view Compiler::__parse_label_name(string_view& line) {

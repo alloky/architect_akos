@@ -1,3 +1,5 @@
+#pragma once
+
 #include "cpuemu.h"
 #include "logging.h"
 #include "CodeLoader.h"
@@ -25,7 +27,7 @@ void CpuEmu::in(){
 
 void CpuEmu::out(){
 	rps[0] = st.pop();
-	std::cout << rps[0];
+	std::cout << rps[0] << std::endl;
 }
 
 void CpuEmu::push(long long val){
@@ -154,67 +156,15 @@ void CpuEmu::exec_loop(){
 
 void CpuEmu::process_instruction(){
 	switch (*instruction_pointer) {
-		case CPUE_ADD_NUM:
-			add();
-			++instruction_pointer;
-			break;
-		case CPUE_SUB_NUM:
-			sub();
-			++instruction_pointer;
-			break;
-		case CPUE_MUL_NUM:
-			mul();
-			++instruction_pointer;
-			break;
-		case CPUE_DIV_NUM:
-			div();
-			++instruction_pointer;
-			break;
-		case CPUE_MOD_NUM:
-			mod();
-			++instruction_pointer;
-			break;
-		case CPUE_CMP_NUM:
-			cmp();
-			++instruction_pointer;
-			break;
-		case CPUE_MOV_NUM:
-			++instruction_pointer;
-			mov(*((size_t*)instruction_pointer));
-			instruction_pointer += sizeof(size_t);
-			break;
-		case CPUE_JMP_NUM:
-			++instruction_pointer;
-			jmp(*((size_t*)instruction_pointer));
-			break;
-		case CPUE_JL_NUM:
-			++instruction_pointer;
-			jl(*((size_t*)instruction_pointer));
-			break;
-		case CPUE_JLE_NUM:
-			++instruction_pointer;
-			jle(*((size_t*)instruction_pointer));
-			break;
-		case CPUE_JEQ_NUM:
-			++instruction_pointer;
-			jeq(*((size_t*)instruction_pointer));
-			break;
-		case CPUE_JGE_NUM:
-			++instruction_pointer;
-			jge(*((size_t*)instruction_pointer));
-			break;
-		case CPUE_JG_NUM:
-			++instruction_pointer;
-			jg(*((size_t*)instruction_pointer));
-			break;
-		case CPUE_PUSH_NUM:
-			++instruction_pointer;
-			push(*((long long*)instruction_pointer));
-			instruction_pointer += sizeof(long long);
-			break;
-		case CPUE_POP_NUM:
-			pop();
-			++instruction_pointer;
+		// Codegeneration for cmd processing
+#define DEF_CMD(CMD, WORD, PARSE_CODE, PROC_CODE) \
+	case CPUE_CMD_NUM:: ## CMD : \
+		if(true) PROC_CODE; \
+		break;
+#include "cpuemu-cmd-defs.h"
+#undef DEF_CMD
+		default:
+			LEV_LOG(LL_ERR, "Unknown command found on addr");
 			break;
 	}
 }

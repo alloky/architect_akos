@@ -29,6 +29,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\utility\include\logging.h" />
+    <ClInclude Include="..\..\..\task_2\include\filelineprocesser.h" />
     <ClInclude Include="..\..\..\task_2\include\file_tools.h" />
     <ClInclude Include="..\..\..\task_2\include\smart_descriptor.h" />
     <ClInclude Include="..\..\..\task_3\include\MemProtector.hpp" />
@@ -36,8 +37,12 @@
     <ClInclude Include="..\..\..\task_3\include\stack.hpp" />
     <ClInclude Include="..\..\include\CodeLoader.h" />
     <ClInclude Include="..\..\include\Compiler.h" />
+    <ClInclude Include="..\..\include\cpuemu-cmd-defs.h" />
     <ClInclude Include="..\..\include\cpuemu-cmds.h" />
     <ClInclude Include="..\..\include\cpuemu.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="test_prog.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -102,6 +107,9 @@
       <AdditionalIncludeDirectories>C:\Users\alloky\Documents\architect_akos\tasks\task_2\src;C:\Users\alloky\Documents\architect_akos\tasks\task_2\include;C:\Users\alloky\Documents\architect_akos\utility\include;C:\Users\alloky\Documents\architect_akos\tasks\task_3\include;C:\Users\alloky\Documents\architect_akos\tasks\task_4\src;C:\Users\alloky\Documents\architect_akos\tasks\task_4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions); WIN=1; _CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
+      <AdditionalOptions>
+      </AdditionalOptions>
+      <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

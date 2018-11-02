@@ -1,3 +1,10 @@
 push 1
 push 2
 add
+
+# comment line
+:here
+in
+add
+out
+jmp :here
