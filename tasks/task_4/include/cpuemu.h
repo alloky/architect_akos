@@ -82,36 +82,20 @@ private:
 
 	void exec_loop();
 	void process_instruction();
-	
+
+	template <class T>
+	T extract_type();
+
+
 	/*
 	 *	Arithmetic instructions
 	 *	
 	*/
-	void add();
-	void sub();
-	void mul();
-	void div();
-	void mod();
+#define DEF_CMD(CMD, WORD, COND, PARSE_CODE) \
+void CMD ## (); \
 
-	/*
-	 *	Compare top of stack with next on stack
-	*/
-	void cmp();
-	
-	void mov(size_t r_ind);
-
-	void jmp(size_t addr);
-	void jl(size_t addr);
-	void jle(size_t addr);
-	void jeq(size_t addr);
-	void jg(size_t addr);
-	void jge(size_t addr);
-	
-	void push(long long val);
-	void pop();
-
-	void in();
-	void out();
+#include "cpuemu-cmd-defs.h"
+#undef DEF_CMD
 
 };
 

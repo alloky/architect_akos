@@ -1,6 +1,10 @@
+mew 
 push 1
 push 2
 add
+
+movl r12 12
+addl r12 12
 
 # comment line
 :here
