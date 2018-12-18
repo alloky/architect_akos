@@ -12,6 +12,7 @@ CpuEmu::CpuEmu(size_t max_ds)
 	} catch (const std::bad_alloc& e){
 		LEV_LOG(LL_ERR, "CPU emulator init failed:");
 		LEV_LOG(LL_ERR, "data segment allocation failed with error:");
+		LEV_LOG(LL_ERR, "data segment allocation failed with error:");
 		LEV_LOG(LL_ERR, "Error : " << e.what());
 	}
 }
@@ -42,21 +43,40 @@ void CpuEmu::POP(){
 	++instruction_pointer;
 }
 
+void CpuEmu::PUSHR() {
+	++instruction_pointer;
+	char r_ind = extract_type<char>();
+	st.push(regs[r_ind]);
+}
+
+void CpuEmu::POPR() {
+	++instruction_pointer;
+	char r_ind = extract_type<char>();
+	regs[r_ind] = st.pop();
+}
+
 void CpuEmu::MOV(){
 	++instruction_pointer;
-	size_t r_ind = extract_type<size_t>();
+	char r_ind = extract_type<char>();
 	long long val = extract_type<long long>();
 	regs[r_ind] = val;
+}
+
+void CpuEmu::SQRT() {
+	++instruction_pointer;
+	char reg = extract_type<char>();
+	regs[reg] = sqrt(regs[reg]);
 }
 
 void CpuEmu::CMP() {
 	rps[0] = st.pop();
 	rps[1] = st.pop();
-	if (rps[0] <= rps[1]) {
-		rps[2] += 2;
+	rps[2] = 0;
+	if (rps[0] < rps[1]) {
+		rps[2] = 2;
 	}
-	if (rps[0] >= rps[1]) {
-		rps[2] += 1;
+	if (rps[0] > rps[1]) {
+		rps[2] = 1;
 	}
 	st.push(rps[1]);
 	st.push(rps[0]);
@@ -70,6 +90,7 @@ void CpuEmu::JMP(){
 }
 
 void CpuEmu::JL(){
+	++instruction_pointer;
 	size_t addr = extract_type<size_t>();
 	rps[0] = rps[2] & 3;
 	if( rps[0] == 1 ){
@@ -78,35 +99,59 @@ void CpuEmu::JL(){
 }
 
 void CpuEmu::JLE(){
+	++instruction_pointer;
 	size_t addr = extract_type<size_t>();
 	rps[0] = rps[2] & 3;
-	if(rps[0] == 1 || rps[0] == 3){
+	if(rps[0] == 1 || rps[0] == 0){
 		instruction_pointer = code + addr;
 	}
 }
 
 void CpuEmu::JEQ(){
+	++instruction_pointer;
 	size_t addr = extract_type<size_t>();
 	rps[0] = rps[2] & 3;
-	if(rps[0] == 3){
+	if(rps[0] == 0){
 		instruction_pointer = code + addr;
 	}
 }
 
 void CpuEmu::JGE(){
+	++instruction_pointer;
 	size_t addr = extract_type<size_t>();
 	rps[0] = rps[2] & 3;
-	if(rps[0] == 2 || rps[0] == 3){
+	if(rps[0] == 2 || rps[0] == 0){
 		instruction_pointer = code + addr;
 	}
 }
 
 void CpuEmu::JG(){
+	++instruction_pointer;
 	size_t addr = extract_type<size_t>();
 	rps[0] = rps[2] & 3;
 	if(rps[0] == 2){
 		instruction_pointer = code + addr;
 	}
+}
+
+void CpuEmu::SHOT() {
+	int type = rand() % 2;
+	if (type) {
+		*((char*)&st + rand() % sizeof(st)) = rand() % 1000;
+	}
+	else {
+		regs[rand() % 132] = rand() % 1000;
+	}
+	++instruction_pointer;
+}
+
+void CpuEmu::CALL() {
+	ret_st.push(instruction_pointer + 1 + sizeof(size_t));
+	JMP();
+}
+
+void CpuEmu::RET() {
+	instruction_pointer = ret_st.pop();
 }
 
 #define ST_ARITHM_INST(cmd, op) \
@@ -239,6 +284,7 @@ void CpuEmu::execute(const char* path) {
 	code = cl.load_binary(path);
 	instruction_pointer = code;
 	code_size = cl.size;
+	byte_code = std::string(code, code_size);
 	exec_loop();
 }
 

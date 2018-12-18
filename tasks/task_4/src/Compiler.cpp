@@ -1,6 +1,7 @@
 #pragma once
 
 #include "compiler.h"
+#include "logging.h"
 #include "cpuemu-cmds.h"
 
 void Compiler::compile(const char* name, const char* path, const char* out_dir) {
@@ -33,10 +34,37 @@ std::string Compiler::getByteCode(FileLineProcesser::LinesView* lv) {
 		if (line[0] == '#') continue;
 		if (line[0] == ':') {
 			labels_addrs[__parse_label_name(line, 0)] = addr;
+			continue;
 		}
-		addr++;
+		size_t first_word_end = line.find(" ");
+		std::vector<std::pair<Compiler::ARG_TYPES, size_t>> args = __parse_args(line);
+		addr += __sum_args_size(args) + 1;
 	}
 }
+
+ size_t Compiler::__sum_args_size(std::vector<std::pair<Compiler::ARG_TYPES, size_t>>& args) {
+	 size_t sum = 0;
+	 for (auto& arg : args) {
+		 switch (arg.first) {
+			case Compiler::ARG_TYPES::REG_STAR:
+				sum += sizeof(char);
+				break;
+			case Compiler::ARG_TYPES::REG:
+				sum += sizeof(char);
+				break;
+			case Compiler::ARG_TYPES::LONG_STAR:
+			case Compiler::ARG_TYPES::LONG:
+				sum += sizeof(long long);
+				break;
+			case Compiler::ARG_TYPES::LABEL:
+				sum += sizeof(size_t);
+				break;
+			default:
+				throw std::exception("size of arg not implemented");
+		 }
+	 }
+	 return sum;
+ }
 
 std::string Compiler::__compilation_loop(FileLineProcesser::LinesView* lv) {
 	addr = 0, 
@@ -118,6 +146,12 @@ std::vector<std::pair<Compiler::ARG_TYPES, size_t>> Compiler::__parse_args(std::
 					else if (line[i] == 'r') {
 						ret.push_back({ Compiler::ARG_TYPES::REG_STAR, i });
 					}
+					else {
+						LEV_LOG(LL_ERR, "Compilation error in line ");
+					}
+				}
+				else {
+					LEV_LOG(LL_ERR, "Compilation error in line ");
 				}
 				flag = false;
 			}
@@ -175,7 +209,7 @@ char Compiler::__parse_reg_name(string_view & line, size_t start)
 		return line[value_part_start] - 'a';
 	}
 	else {
-		return atoi(line.data() + value_part_start);
+		return atoi(line.data() + value_part_start) + 4;
 	}
 }
 

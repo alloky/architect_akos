@@ -82,7 +82,6 @@ void DrawImage(void) {
 */
 
 int main() {
-	
 	Compiler c;
 	c.compile("test_prog", ".", "out_bins");
 	CpuEmu emulator(20000);

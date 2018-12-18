@@ -29,7 +29,10 @@ public:
 
 private:
 	std::vector<std::pair<Compiler::ARG_TYPES, size_t>> __parse_args(std::string_view& line) const;
+	size_t __sum_args_size(std::vector<std::pair<Compiler::ARG_TYPES, size_t>>& args);
+
 	void __push_args(std::string_view& line, std::vector<std::pair<Compiler::ARG_TYPES, size_t>>& args);
+
 
 	void __push_LABEL(std::string_view & line, size_t start);
 	void __push_LONG(std::string_view & line, size_t start);

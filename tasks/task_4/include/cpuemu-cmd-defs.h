@@ -42,5 +42,13 @@ DEF_RL_RR_CMD(DIVL, "divl")
 DEF_RL_RR_CMD(MODL, "modl")
 DEF_RL_RR_CMD(MOVL, "movl")
 
+DEF_CMD(PUSHR, "pushr", true, { PUSH_NUM(PUSHR); })
+DEF_CMD(POPR, "popr", true, { PUSH_NUM(POPR); })
+
+
 // AHTUNG
-DEF_CMD(MEW, "mew", true, { PUSH_NUM(MEW); })
+DEF_CMD(MEW, "mew", true, { PUSH_NUM(MEW);    })
+DEF_CMD(SHOT, "shot", true, { PUSH_NUM(SHOT); })
+DEF_CMD(CALL, "call", true, { PUSH_NUM(CALL); })
+DEF_CMD(RET, "ret", true, { PUSH_NUM(RET);    })
+DEF_CMD(SQRT, "sqrt", true, { PUSH_NUM(SQRT); })

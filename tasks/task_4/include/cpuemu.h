@@ -1,5 +1,6 @@
-#include "stack.hpp"
+#include <string>
 
+#include "stack.hpp"
 #include "cpuemu-cmds.h"
 
 /**
@@ -32,9 +33,10 @@ class CpuEmu {
 	 *	rps[0] : tmp regiter
 	 *	rps[1] : tmp2 regiter
 	 *	rps[2] : flag register
+	 *  rps[3] : ret addr
 	 *
 	*/
-	long long rps[10];
+	long long rps[16];
 
 	/*
 	 * @brief pointer to heap segment
@@ -54,6 +56,8 @@ class CpuEmu {
 	 * @brief stack for push pop operations
 	*/
 	Stack<long long> st{};
+
+	Stack<char*> ret_st{};
 
 	/*
 	 * @brief size of data segment
@@ -79,6 +83,7 @@ private:
 	char* code{ nullptr };
 	size_t code_size{ 0 };
 	char* instruction_pointer{ 0 };
+	std::string byte_code;
 
 	void exec_loop();
 	void process_instruction();
