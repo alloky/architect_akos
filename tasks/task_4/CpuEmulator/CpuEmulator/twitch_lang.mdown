@@ -14,13 +14,13 @@ MrDestructoid x SMOrc
 
 MrDestructoid y SMOrc
 
-x :D PowerUpL x CurseLit 2 PowerUpR riPepperonis y SMOrc
+x D: PowerUpL x CurseLit 2 PowerUpR riPepperonis y SMOrc
 
-WutFace ( a == 2 ) 
+WutFace PoewrUpL a == 2 PowerUpR 
 
 FeelsGoodMan
 
-SwiftRage "hello world" SMOrc
+	SwiftRage "hello world" SMOrc
 
 FeelsBadMan
 
