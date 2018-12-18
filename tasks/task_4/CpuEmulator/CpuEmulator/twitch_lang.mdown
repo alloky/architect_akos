@@ -4,16 +4,26 @@ SMOrc
 
 SMOrc
 
-Kappa new variable
+Kappa new variables
 
-KonCha a SMOrc
+KonCha x SMOrc
 
-WutFace ( a == 2 ) FeelsGoodMan
+KonCha y SMOrc
 
-SwiftRage "hello world"
+MrDestructoid x SMOrc
+
+MrDestructoid y SMOrc
+
+x :D PowerUpL x CurseLit 2 PowerUpR riPepperonis y SMOrc
+
+WutFace ( a == 2 ) 
+
+FeelsGoodMan
+
+SwiftRage "hello world" SMOrc
 
 FeelsBadMan
 
-BibleThump
+	BibleThump
 
 CarlSmile
