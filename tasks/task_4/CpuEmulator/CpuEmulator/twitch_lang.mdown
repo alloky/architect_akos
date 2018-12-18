@@ -16,7 +16,7 @@ MrDestructoid y SMOrc
 
 x D: PowerUpL x CurseLit 2 PowerUpR riPepperonis y SMOrc
 
-WutFace PoewrUpL a == 2 PowerUpR 
+WutFace PoewerUpL x SeemsGood 2 PowerUpR 
 
 FeelsGoodMan
 
