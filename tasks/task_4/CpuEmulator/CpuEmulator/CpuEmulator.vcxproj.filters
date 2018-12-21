@@ -36,6 +36,9 @@
     <ClCompile Include="..\..\..\task_2\src\filelineprocesser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\twitchLangCompiler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\cpuemu.h">
@@ -77,6 +80,9 @@
     <ClInclude Include="..\..\include\GLFW\glfw3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\twitchLangCompiler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="test_prog.txt">
@@ -87,5 +93,10 @@
     <Library Include="..\..\lib\glfw3.lib">
       <Filter>Resource Files</Filter>
     </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="twitch_lang.mdown">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

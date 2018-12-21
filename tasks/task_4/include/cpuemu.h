@@ -23,7 +23,7 @@ class CpuEmu {
 	 * Supposed to be used by user in programms
 	 * 
 	*/
-	long long regs[132];
+	long long regs[200];
 
 	/*
 	 *	@brief system registers

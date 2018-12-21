@@ -1,10 +1,5 @@
-Kappa Some code examples
-
-SMOrc
-
-SMOrc
-
-Kappa new variables
+Kappa Code example Kappa
+Kappa new variables Kappa
 
 KonCha x SMOrc
 
@@ -16,14 +11,80 @@ MrDestructoid y SMOrc
 
 x D: PowerUpL x CurseLit 2 PowerUpR riPepperonis y SMOrc
 
-WutFace PowerUpL x SeemsGood 2 PowerUpR 
+KonCha two SMOrc
 
-FeelsGoodMan
+two D: 2 SMOrc
 
-	SwiftRage "hello world" SMOrc
+KonCha ten SMOrc
+
+ten D: 10 SMOrc
+
+WutFace PowerUpL x SeemsGood two PowerUpR 
+
+FeelsGoodMan 
+
+CoolStoryBob
+
+	KonCha i SMOrc
+
+	i D: 0 SMOrc
+
+	print PowerUpL ten , y PowerUpR SMOrc
+
+	Pog PowerUpL i < ten PowerUpR 
+	
+	CoolStoryBob
+
+	SwiftRage i SMOrc
+
+	i D: i riPepperonis 1 SMOrc
+
+	CarlSmile
+
+	SwiftRage x SMOrc
+	
+	MrDestructoid x SMOrc
+
+CarlSmile
 
 FeelsBadMan
 
-	BibleThump
+CoolStoryBob
+
+	SwiftRage y SMOrc
+
+CarlSmile
+
+FuckYea
+
+
+
+gachiBASS print PowerUpL x , y PowerUpR 
+
+CoolStoryBob
+
+	WutFace PowerUpL x SeemsGood ten PowerUpR 
+	
+	FeelsGoodMan 
+
+	CoolStoryBob
+		
+		FeelsAmazingMan
+
+	CarlSmile
+
+	FeelsBadMan
+
+	CoolStoryBob
+
+		SwiftRage y SMOrc
+		
+		x D: x riPepperonis 1 SMOrc
+		
+		print PowerUpL x , y PowerUpR SMOrc
+
+		FeelsAmazingMan 
+
+	CarlSmile
 
 CarlSmile

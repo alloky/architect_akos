@@ -19,44 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\task_2\src\filelineprocesser.cpp" />
-    <ClCompile Include="..\..\..\task_2\src\file_tools.cpp" />
-    <ClCompile Include="..\..\..\task_2\src\smart_descriptor.cpp" />
-    <ClCompile Include="..\..\src\codeloader.cpp" />
-    <ClCompile Include="..\..\src\Compiler.cpp" />
-    <ClCompile Include="..\..\src\cpuemu.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
-    <ClCompile Include="..\..\src\twitchLangCompiler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\utility\include\logging.h" />
-    <ClInclude Include="..\..\..\task_2\include\filelineprocesser.h" />
-    <ClInclude Include="..\..\..\task_2\include\file_tools.h" />
-    <ClInclude Include="..\..\..\task_2\include\smart_descriptor.h" />
-    <ClInclude Include="..\..\..\task_3\include\MemProtector.hpp" />
-    <ClInclude Include="..\..\..\task_3\include\ProtectedCArray.hpp" />
-    <ClInclude Include="..\..\..\task_3\include\stack.hpp" />
-    <ClInclude Include="..\..\include\CodeLoader.h" />
-    <ClInclude Include="..\..\include\Compiler.h" />
-    <ClInclude Include="..\..\include\cpuemu-cmd-defs.h" />
-    <ClInclude Include="..\..\include\cpuemu-cmds.h" />
-    <ClInclude Include="..\..\include\cpuemu.h" />
-    <ClInclude Include="..\..\include\GLFW\glfw3.h" />
-    <ClInclude Include="..\..\include\twitchLangCompiler.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="test_prog.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="..\..\lib\glfw3.lib" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="twitch_lang.mdown" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{9EBD13E6-D4C3-4FC3-8EC8-E0B4148CACDD}</ProjectGuid>
-    <RootNamespace>CpuEmulator</RootNamespace>
+    <ProjectGuid>{1E62E1E4-AFB6-458E-8A43-94E58E6B43D8}</ProjectGuid>
+    <RootNamespace>grammaticparsergenerator</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -104,26 +75,15 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <SourcePath>C:\Users\alloky\Documents\architect_akos\tasks\task_2\src;C:\Users\alloky\Documents\architect_akos\tasks\task_4\src;$(SourcePath)</SourcePath>
-  </PropertyGroup>
+  <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\alloky\Documents\architect_akos\tasks\task_4\include\GLFW;C:\Users\alloky\Documents\architect_akos\tasks\task_4\lib;C:\Users\alloky\Documents\architect_akos\tasks\task_2\src;C:\Users\alloky\Documents\architect_akos\tasks\task_2\include;C:\Users\alloky\Documents\architect_akos\utility\include;C:\Users\alloky\Documents\architect_akos\tasks\task_3\include;C:\Users\alloky\Documents\architect_akos\tasks\task_4\src;C:\Users\alloky\Documents\architect_akos\tasks\task_4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions); WIN=1; _CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
-      <AdditionalOptions>
-      </AdditionalOptions>
-      <PreprocessToFile>false</PreprocessToFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\..\..\utility\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
-    <Link>
-      <AdditionalLibraryDirectories>C:\Users\alloky\Documents\architect_akos\tasks\task_4\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>winmm.lib;glfw3.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

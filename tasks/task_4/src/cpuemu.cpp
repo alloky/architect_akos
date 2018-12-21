@@ -116,6 +116,16 @@ void CpuEmu::JEQ(){
 	}
 }
 
+void CpuEmu::JNE() {
+	++instruction_pointer;
+	size_t addr = extract_type<size_t>();
+	rps[0] = rps[2] & 3;
+	if (rps[0] != 0) {
+		instruction_pointer = code + addr;
+	}
+}
+
+
 void CpuEmu::JGE(){
 	++instruction_pointer;
 	size_t addr = extract_type<size_t>();
@@ -124,6 +134,8 @@ void CpuEmu::JGE(){
 		instruction_pointer = code + addr;
 	}
 }
+
+
 
 void CpuEmu::JG(){
 	++instruction_pointer;

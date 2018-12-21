@@ -199,7 +199,10 @@ void Compiler::__push_args(string_view& line, std::vector<std::pair<Compiler::AR
 string_view Compiler::__parse_label_name(string_view& line, size_t start) {
 	size_t label_name_start = start + 1;
 	size_t label_name_end = line.find(' ', label_name_start);
-	return line.substr(label_name_start, label_name_end);
+	if (label_name_end != line.size()) {
+		label_name_end -= 1;
+	}
+	return line.substr(label_name_start, label_name_end - label_name_start + 1);
 }
 
 char Compiler::__parse_reg_name(string_view & line, size_t start)
